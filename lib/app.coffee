@@ -6,12 +6,7 @@ server.connection(
   port: 8000
 )
 
-server.views(
-  engines: 
-    html: lego
-  path: __dirname + '/../templates'
-  compileMode: 'async'
-)
+lego.attach(server, __dirname + '/../templates')
 
 server.route(
   method: 'GET'
