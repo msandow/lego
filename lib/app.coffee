@@ -13,6 +13,10 @@ server.route(
   path: '/'
   handler: (request, reply) ->
     reply.view('main')
+  config:
+    state:
+      parse: false
+      failAction: 'ignore'
 )
 
 module.exports = () ->
