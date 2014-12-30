@@ -1,0 +1,4 @@
+lego
+====
+
+Hapi html templating
