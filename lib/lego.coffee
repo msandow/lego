@@ -27,30 +27,37 @@ findIncludes = ($, root, finished) ->
   if includes.length    
     includes.each((i, el) ->
       absPath = resolvePath(el, root)
-
+      
       includePaths[absPath] = (cb) ->
         if not fetchedTemplates[absPath]
           fs.exists(absPath, (exists)->
             if not exists
-              fetchedTemplates[absPath] = false
+              fetchedTemplates[absPath] = '<!-- -->'
               console.warn('Template',absPath,'not found')
-              cb(null, false)
+              cb(null, fetchedTemplates[absPath])
             else
-              fs.readFile(absPath, (err, data) ->
-                fetchedTemplates[absPath] = $(data.toString())
-                cb(null, fetchedTemplates[absPath])
-              )
+              ext = path.extname(absPath)
+              switch ext
+                when '.html'
+                  fs.readFile(absPath, (err, data) ->
+                    fetchedTemplates[absPath] = data.toString()
+                    cb(null, fetchedTemplates[absPath])
+                  )
+                when '.js', '.coffee'
+                  fetchedTemplates[absPath] = require(absPath)()
+
+                  cb(null, fetchedTemplates[absPath])
           )
         else
           cb(null, fetchedTemplates[absPath])
     )
 
     async.parallel(includePaths, (err, results) ->
-      #console.log(results)
+      #console.log(fetchedTemplates)
       includes.each((i, el)->
         absPath = resolvePath(el, root)
         if fetchedTemplates[absPath]
-          $(el).replaceWith(fetchedTemplates[absPath])
+          $(el).replaceWith($(fetchedTemplates[absPath]))
       )
 
       if findIncludComments($).length
@@ -75,7 +82,6 @@ module.exports =
   compile: (template, options, callback) ->
     #console.log(template)
     #console.log(options)
-    
     findIncludes(cheerio.load(template), path.dirname(options.filename), (renderedTemplate)->
       callback(null, (ctx, opts,cb) ->
         fetchedTemplates = {}
