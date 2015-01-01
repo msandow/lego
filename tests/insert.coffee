@@ -17,24 +17,16 @@ describe('Insert', ->
       port: 8000
     )
 
-    lego.attach(server, __dirname + '/templates')
+    lego.attach(server, __dirname + '/templates/')
 
     server.route(
       method: 'GET'
       path: '/'
       handler: (request, reply) ->
-        reply.view('main')
-      config:
-        state:
-          parse: false
-          failAction: 'ignore'
-    )
-    
-    server.route(
-      method: 'GET'
-      path: '/2'
-      handler: (request, reply) ->
-        reply.view('main_2')
+        reply.view('main',
+          foobar: '<!-- lego::insert next -->'
+          next: '<i>Text</i>'
+        )
       config:
         state:
           parse: false
@@ -48,7 +40,7 @@ describe('Insert', ->
     server.stop()
   )
   
-  it('Should insert html documents', (done)->
+  it('Should insert vars', (done)->
     request('http://localhost:8000', (err, response, body)->
       expect(body).to.equal("""
       <!DOCTYPE html>
@@ -61,7 +53,7 @@ describe('Insert', ->
           <h1>Header</h1>
       <!-- foo bar -->
       <p>Foo</p>
-      <span><!-- * foobar --></span>
+      <span><i>Text</i></span>
       <h1>Header</h1>
       <!-- foo bar -->
         </body>
@@ -71,24 +63,5 @@ describe('Insert', ->
       done()
     )  
   )
-  
-  it('Should insert js documents', (done)->
-    request('http://localhost:8000/2', (err, response, body)->
-      expect(body).to.equal("""
-      <!DOCTYPE html>
-      <html lang="en">
-        <head>
-          <meta charset="utf-8">
-          <title>Lego Test</title>
-        </head>
-        <body>
-          <h1>Header</h1>
-      <!-- foo bar -->
-        </body>
-      </html>
-      """)
-      
-      done()
-    )
-  )
+
 )
