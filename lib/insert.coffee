@@ -20,6 +20,6 @@ insert.recurse = ($, ctx) ->
 
 insert.resolve = (el, ctx) ->
   _var = el.data.trim().replace(insert.regexp, '$1')
-  ctx[_var] or '<!-- -->'
+  ctx[_var] or ''
 
 module.exports = insert

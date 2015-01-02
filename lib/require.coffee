@@ -2,6 +2,7 @@ path = require('path')
 async = require('async')
 fs = require('fs')
 insert = require(__dirname + '/insert.coffee')
+_if = require(__dirname + '/if.coffee')
 
 req = 
   regexp: new RegExp('lego::require\\s+(.*?)', 'i')
@@ -22,10 +23,11 @@ req.recurse = ($, ctx, root, finished) ->
       absPath = req.resolve(el, root)
       
       includePaths[absPath] = (cb) ->
+        req.fetchedTemplates[absPath] = ''
+      
         if not req.fetchedTemplates[absPath]
           fs.exists(absPath, (exists)->
             if not exists
-              req.fetchedTemplates[absPath] = '<!-- -->'
               console.warn('Template',absPath,'not found')
               cb(null, req.fetchedTemplates[absPath])
             else
@@ -40,7 +42,6 @@ req.recurse = ($, ctx, root, finished) ->
                   tempInclude = require(absPath)
                   
                   if tempInclude.compileMode is undefined or tempInclude.render is undefined
-                    req.fetchedTemplates[absPath] = '<!-- -->'
                     console.log('Template',absPath,'does not have compileMode / render')
                     cb(null, req.fetchedTemplates[absPath])
                   else
@@ -66,6 +67,7 @@ req.recurse = ($, ctx, root, finished) ->
       )
       
       insert.recurse($, ctx)
+      _if.recurse($, ctx)
       
       if req.findComments($).length
         req.recurse($, ctx, root, finished)
