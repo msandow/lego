@@ -16,7 +16,7 @@ req.findComments = ($) ->
 
 req.recurse = ($, ctx, root, finished) ->
   includePaths = {}
-
+  
   includes = req.findComments($)
   
   if includes.length
@@ -66,7 +66,7 @@ req.recurse = ($, ctx, root, finished) ->
         if req.fetchedTemplates[absPath]
           $(el).replaceWith($(req.fetchedTemplates[absPath]))
       )
-      
+
       insert.recurse($, ctx)
       _if.recurse($, ctx)
       _notif.recurse($, ctx)
@@ -76,7 +76,11 @@ req.recurse = ($, ctx, root, finished) ->
       else
         finished($.html())
     )  
-  else  
+  else
+    insert.recurse($, ctx)
+    _if.recurse($, ctx)
+    _notif.recurse($, ctx)
+  
     finished($.html())
 
 req.resolve = (el, root) ->

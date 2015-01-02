@@ -48,7 +48,7 @@ _notif.resolve = (el, ctx) ->
     if Array.isArray(ctx[_var])
       return ctx[_var].length is 0
     else
-      return !!ctx[_var]
+      return !ctx[_var]
   else
     return true
 

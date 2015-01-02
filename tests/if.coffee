@@ -45,6 +45,32 @@ describe('If', ->
           failAction: 'ignore'
     )
     
+    server.route(
+      method: 'GET'
+      path: '/3'
+      handler: (request, reply) ->
+        reply.view('main_if_mixed',
+          foo: ''
+        )
+      config:
+        state:
+          parse: false
+          failAction: 'ignore'
+    )
+    
+    server.route(
+      method: 'GET'
+      path: '/4'
+      handler: (request, reply) ->
+        reply.view('main_if_mixed',
+          foo: 't'
+        )
+      config:
+        state:
+          parse: false
+          failAction: 'ignore'
+    )
+    
     server.start()
   )
   
@@ -91,6 +117,46 @@ describe('If', ->
             
           
           
+          
+        </body>
+      </html>
+      """)
+      
+      done()
+    )  
+  )
+  
+  it('Should handle mixed ifs / notifs - negative', (done)->
+    request('http://localhost:8000/3', (err, response, body)->
+      expect(body).to.equal("""
+      <!DOCTYPE html>
+      <html lang="en">
+        <head>
+          <meta charset="utf-8">
+          <title>Lego Test</title>
+        </head>
+        <body>
+          
+            
+          
+        </body>
+      </html>
+      """)
+      
+      done()
+    )  
+  )
+  
+  it('Should handle mixed ifs / notifs - positive', (done)->
+    request('http://localhost:8000/4', (err, response, body)->
+      expect(body).to.equal("""
+      <!DOCTYPE html>
+      <html lang="en">
+        <head>
+          <meta charset="utf-8">
+          <title>Lego Test</title>
+        </head>
+        <body>
           
         </body>
       </html>
