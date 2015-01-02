@@ -1,7 +1,7 @@
 pairs = require(__dirname + '/pairs.coffee')
 
 _if = 
-  openRegexp: new RegExp('lego::if\\s+(.*?)', 'i')
+  openRegexp: new RegExp('lego::(!*)if\\s+(.*?)', 'i')
   closeRegexp: new RegExp('lego::endif\\s*', 'i')
 
 _if.findOpenComments = ($) ->
@@ -44,12 +44,24 @@ _if.recurse = ($, ctx) ->
 
 _if.resolve = (el, ctx) ->
   _var = el.data.trim().replace(_if.openRegexp, '$1')
-  if ctx[_var]
-    if Array.isArray(ctx[_var])
-      return ctx[_var].length > 0
+  
+  if _var[0] is '!'
+    _var = _var.slice(1)
+    
+    if ctx[_var]
+      if Array.isArray(ctx[_var])
+        return ctx[_var].length is 0
+      else
+        return !ctx[_var]
     else
-      return !!ctx[_var]
+      return true
   else
-    return false
+    if ctx[_var]
+      if Array.isArray(ctx[_var])
+        return ctx[_var].length > 0
+      else
+        return !!ctx[_var]
+    else
+      return false
 
 module.exports = _if

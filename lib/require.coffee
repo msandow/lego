@@ -3,7 +3,6 @@ async = require('async')
 fs = require('fs')
 insert = require(__dirname + '/insert.coffee')
 _if = require(__dirname + '/if.coffee')
-_notif = require(__dirname + '/notif.coffee')
 
 req = 
   regexp: new RegExp('lego::require\\s+(.*?)', 'i')
@@ -69,7 +68,6 @@ req.recurse = ($, ctx, root, finished) ->
 
       insert.recurse($, ctx)
       _if.recurse($, ctx)
-      _notif.recurse($, ctx)
       
       if req.findComments($).length
         req.recurse($, ctx, root, finished)
@@ -79,7 +77,6 @@ req.recurse = ($, ctx, root, finished) ->
   else
     insert.recurse($, ctx)
     _if.recurse($, ctx)
-    _notif.recurse($, ctx)
   
     finished($.html())
 

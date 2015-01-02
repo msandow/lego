@@ -25,7 +25,35 @@ describe('Insert', ->
       handler: (request, reply) ->
         reply.view('main',
           foobar: '<!-- lego::insert next -->'
-          next: '<i>Text</i>'
+          next: '<i class="foo">Text</i>'
+        )
+      config:
+        state:
+          parse: false
+          failAction: 'ignore'
+    )
+    
+    server.route(
+      method: 'GET'
+      path: '/2'
+      handler: (request, reply) ->
+        reply.view('main',
+          foobar: [1,2,3]
+        )
+      config:
+        state:
+          parse: false
+          failAction: 'ignore'
+    )
+    
+    
+    server.route(
+      method: 'GET'
+      path: '/3'
+      handler: (request, reply) ->
+        reply.view('main',
+          foobar: 
+            stuff:'bar'
         )
       config:
         state:
@@ -40,7 +68,7 @@ describe('Insert', ->
     server.stop()
   )
   
-  it('Should insert vars', (done)->
+  it('Should insert vars - string', (done)->
     request('http://localhost:8000', (err, response, body)->
       expect(body).to.equal("""
       <!DOCTYPE html>
@@ -53,7 +81,56 @@ describe('Insert', ->
           <h1>Header</h1>
       <!-- foo bar -->
       <p>Foo</p>
-      <span><i>Text</i></span>
+      <span><i class="foo">Text</i></span>
+      <h1>Header</h1>
+      <!-- foo bar -->
+        </body>
+      </html>
+      """)
+      
+      done()
+    )  
+  )
+  
+  
+  it('Should insert vars - array', (done)->
+    request('http://localhost:8000/2', (err, response, body)->
+      expect(body).to.equal("""
+      <!DOCTYPE html>
+      <html lang="en">
+        <head>
+          <meta charset="utf-8">
+          <title>Lego Test</title>
+        </head>
+        <body>
+          <h1>Header</h1>
+      <!-- foo bar -->
+      <p>Foo</p>
+      <span>[1,2,3]</span>
+      <h1>Header</h1>
+      <!-- foo bar -->
+        </body>
+      </html>
+      """)
+      
+      done()
+    )  
+  )
+  
+  it('Should insert vars - object', (done)->
+    request('http://localhost:8000/3', (err, response, body)->
+      expect(body).to.equal("""
+      <!DOCTYPE html>
+      <html lang="en">
+        <head>
+          <meta charset="utf-8">
+          <title>Lego Test</title>
+        </head>
+        <body>
+          <h1>Header</h1>
+      <!-- foo bar -->
+      <p>Foo</p>
+      <span>{&quot;stuff&quot;:&quot;bar&quot;}</span>
       <h1>Header</h1>
       <!-- foo bar -->
         </body>

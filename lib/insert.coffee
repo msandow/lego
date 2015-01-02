@@ -10,7 +10,7 @@ insert.recurse = ($, ctx) ->
   inserts = insert.findComments($)
   
   inserts.each((i, el) ->
-    $(el).replaceWith($(insert.resolve(el, ctx)))
+    $(el).replaceWith(insert.resolve(el, ctx))
   )
   
   if insert.findComments($).length
@@ -20,6 +20,13 @@ insert.recurse = ($, ctx) ->
 
 insert.resolve = (el, ctx) ->
   _var = el.data.trim().replace(insert.regexp, '$1')
-  ctx[_var] or ''
+  
+  if ctx[_var]
+    if Array.isArray(ctx[_var]) or typeof ctx[_var] is 'object'
+      return JSON.stringify(ctx[_var])
+    else
+      return ctx[_var]
+  else
+    return ''
 
 module.exports = insert
