@@ -17,8 +17,6 @@ module.exports = (root, $, ctx, openingTag, closingTag, resolver) ->
     fullSet.each((i, el)->
       if isOpenSection(el)
         open++
-        if open > 1
-          applyPairs(root, root(el), ctx)
 
       if isCloseSection(el)
         open--

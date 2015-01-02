@@ -21,12 +21,18 @@ _if.recurse = ($, ctx) ->
   if ifs.length and eifs.length
     if ifs.length is eifs.length
       
-      pairs($, ifs, ctx, _if.openRegexp, _if.closeRegexp, (fullSet)->
-        if not _if.resolve(fullSet.get(0), ctx)
-          fullSet.remove()
-        else
-          fullSet.eq(0).remove()
-          fullSet.eq(-1).remove()
+      pairs(
+        $,
+        ifs,
+        ctx,
+        _if.openRegexp,
+        _if.closeRegexp,
+        (fullSet)->
+          if not _if.resolve(fullSet.get(0), ctx)
+            fullSet.remove()
+          else
+            fullSet.eq(0).remove()
+            fullSet.eq(-1).remove()
       )
 
       if _if.findOpenComments($).length

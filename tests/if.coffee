@@ -63,6 +63,10 @@ describe('If', ->
         </head>
         <body>
           
+          
+          
+            <p>Bar</p>
+          
         </body>
       </html>
       """)
@@ -85,6 +89,8 @@ describe('If', ->
             
               <h1>Header</h1>\n<!-- foo bar -->
             
+          
+          
           
         </body>
       </html>
