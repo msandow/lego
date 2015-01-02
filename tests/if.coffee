@@ -113,7 +113,8 @@ describe('If', ->
         <body>
           
             
-              <h1>Header</h1>\n<!-- foo bar -->
+              <h1>Header</h1>
+      <!-- foo bar -->
             
           
           
