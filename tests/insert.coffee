@@ -25,7 +25,8 @@ describe('Insert', ->
       handler: (request, reply) ->
         reply.view('main',
           foobar: '<!-- lego::insert next -->'
-          next: '<i class="foo">Text</i>'
+          next: '<i class="<!-- lego::insert newClass -->">Text</i>'
+          newClass: 'classy'
         )
       config:
         state:
@@ -81,7 +82,7 @@ describe('Insert', ->
           <h1>Header</h1>
       <!-- foo bar -->
       <p>Foo</p>
-      <span><i class="foo">Text</i></span>
+      <span><i class="classy">Text</i></span>
       <h1>Header</h1>
       <!-- foo bar -->
         </body>

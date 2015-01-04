@@ -1,4 +1,4 @@
-module.exports = (root, $, ctx, openingTag, closingTag, resolver) ->
+module.exports = (root, $, ctx, openingTag, closingTag, topLevelResolver, subLevelResolver = false) ->
   
   isOpenSection = (i) ->
     i.type is 'comment' and openingTag.test(i.data.trim())
@@ -16,6 +16,7 @@ module.exports = (root, $, ctx, openingTag, closingTag, resolver) ->
 
     fullSet.each((i, el)->
       if isOpenSection(el)
+        applyPairs(root, root(el), subLevelResolver(root(el))) if subLevelResolver
         open++
 
       if isCloseSection(el)
@@ -26,6 +27,6 @@ module.exports = (root, $, ctx, openingTag, closingTag, resolver) ->
     )
 
     fullSet = fullSet.slice(0,end)
-    resolver(fullSet)
+    topLevelResolver(fullSet)
     
   applyPairs(root, $, ctx)

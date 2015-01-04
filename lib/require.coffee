@@ -3,6 +3,7 @@ async = require('async')
 fs = require('fs')
 insert = require(__dirname + '/insert.coffee')
 _if = require(__dirname + '/if.coffee')
+_fe = require(__dirname + '/foreach.coffee')
 
 req = 
   regexp: new RegExp('lego::require\\s+(.*?)', 'i')
@@ -66,6 +67,7 @@ req.recurse = ($, ctx, root, finished) ->
           $(el).replaceWith($(req.fetchedTemplates[absPath]))
       )
 
+      _fe.recurse($, ctx)
       insert.recurse($, ctx)
       _if.recurse($, ctx)
       
@@ -75,6 +77,7 @@ req.recurse = ($, ctx, root, finished) ->
         finished($.html())
     )  
   else
+    _fe.recurse($, ctx)
     insert.recurse($, ctx)
     _if.recurse($, ctx)
   
