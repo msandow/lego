@@ -37,7 +37,7 @@ insert.resolve = (el, ctx) ->
       if Array.isArray(ctx[_var]) or typeof ctx[_var] is 'object'
         return JSON.stringify(ctx[_var])
       else
-        return ctx[_var]
+        return String(ctx[_var])
     else
       return ''
 

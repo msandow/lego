@@ -2,19 +2,17 @@ require('mocha')
 expect = require('chai').expect
 hapi = require('hapi')
 request = require('request')
+config = require(__dirname + '/config.coffee')
 
 lego = require(__dirname + '/../lego.js')
 server = new hapi.Server()
-
-port = 8000
-
 
 describe('Require', ->
   server = new hapi.Server()
 
   before(()->
     server.connection(
-      port: 8000
+      port: config.port
     )
 
     lego.attach(server, __dirname + '/templates/')
@@ -62,8 +60,8 @@ describe('Require', ->
   )
   
   it('Should require html documents', (done)->
-    request('http://localhost:8000', (err, response, body)->
-      expect(body).to.equal("""
+    request('http://localhost:'+config.port, (err, response, body)->
+      expect(config.cleanHTML(body)).to.equal(config.cleanHTML("""
       <!DOCTYPE html>
       <html lang="en">
         <head>
@@ -72,22 +70,22 @@ describe('Require', ->
         </head>
         <body>
           <h1>Header</h1>
-      <!-- foo bar -->
-      <p>Foo</p>
-      <span></span>
-      <h1>Header</h1>
-      <!-- foo bar -->
+          <!-- foo bar -->
+            <p>Foo</p>
+            <span></span>
+            <h1>Header</h1>
+          <!-- foo bar -->
         </body>
       </html>
-      """)
+      """))
       
       done()
     )  
   )
   
   it('Should require js sync documents', (done)->
-    request('http://localhost:8000/2', (err, response, body)->
-      expect(body).to.equal("""
+    request('http://localhost:'+config.port+'/2', (err, response, body)->
+      expect(config.cleanHTML(body)).to.equal(config.cleanHTML("""
       <!DOCTYPE html>
       <html lang="en">
         <head>
@@ -96,18 +94,18 @@ describe('Require', ->
         </head>
         <body>
           <h1>Header</h1>
-      <!-- foo bar -->
+          <!-- foo bar -->
         </body>
       </html>
-      """)
+      """))
       
       done()
     )
   )
   
   it('Should require js async documents', (done)->
-    request('http://localhost:8000/3', (err, response, body)->
-      expect(body).to.equal("""
+    request('http://localhost:'+config.port+'/3', (err, response, body)->
+      expect(config.cleanHTML(body)).to.equal(config.cleanHTML("""
       <!DOCTYPE html>
       <html lang="en">
         <head>
@@ -116,11 +114,10 @@ describe('Require', ->
         </head>
         <body>
           <h1>Header</h1>
-      <!-- foo bar -->
-      
+          <!-- foo bar -->
         </body>
       </html>
-      """)
+      """))
       
       done()
     )

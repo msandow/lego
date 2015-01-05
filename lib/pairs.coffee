@@ -9,7 +9,7 @@ module.exports = (root, $, ctx, openingTag, closingTag, topLevelResolver, subLev
   openFetch = (i) ->
     i.data.trim().replace(openingTag, '$1')
   
-  applyPairs = (root, $, ctx) ->
+  rewriteRoots = (root, $) ->
     fullSet = []
 
     walkTree = (item) ->
@@ -31,17 +31,15 @@ module.exports = (root, $, ctx, openingTag, closingTag, topLevelResolver, subLev
       start = i if e is $.get(0)
 
     fullSet = fullSet.slice(start)
-    open = 0
     parent = false
-
-    #
-    # Logical tree for finding parent - children relationship
-
+    open = 0
+    
     for el,i in fullSet
       if isOpenSection(el)
-        if subLevelResolver and open > 0
-          el.data = el.data.replace(openFetch(el), openFetch(parent) + '.' + openFetch(el))
-          applyPairs(root, root(el), ctx)
+        if open > 0
+          #el.data = el.data.replace(openFetch(el), openFetch(parent) + '.' + openFetch(el)) if not el.rewritten
+          el.rewritten = true
+          rewriteRoots(root, root(el))
         
         parent = el
         open++
@@ -50,7 +48,11 @@ module.exports = (root, $, ctx, openingTag, closingTag, topLevelResolver, subLev
         open--
         if open is 0
           break
-
+  
+  applyPairs = (root, $, ctx) ->
+    #
+    # Logical tree for finding parent - children relationship
+    rewriteRoots(root, $) if subLevelResolver
 
     #
     # Tree for proper insertion into trees through cheerio
@@ -73,6 +75,6 @@ module.exports = (root, $, ctx, openingTag, closingTag, topLevelResolver, subLev
     )
 
     fullSet = fullSet.slice(0,end)
-    topLevelResolver(fullSet)
+    topLevelResolver(fullSet) if fullSet.length
 
   applyPairs(root, $, ctx)

@@ -16,21 +16,34 @@ _fe.findCloseComments = ($) ->
     el.type is 'comment' and _fe.closeRegexp.test(el.data.trim())
   )
 
-_fe.resolvedParser = (resolved, stamp, newNode) ->
-  i = 0
+_fe.resolvedParser = (fullSet, ctx) ->
+  resolved = _fe.resolve(fullSet.get(0), ctx)
   
-  while i < resolved.length
-    if Array.isArray(resolved[i])
-      _fe.resolvedParser(resolved[i], stamp, newNode)
-    else
-      cloned = cheerio.load('<body></body>')
-      cloned('*').first().append(stamp.clone())
+  if not resolved
+    fullSet.remove()
+  else
+    newNode = cheerio.load('<body></body>')('*').first()
+    stamp = fullSet.slice(1,-2)
+    i = 0
 
-      insert.recurse(cloned, resolved[i])
-      newNode.append(cloned.html())
-    i++
+    while i < resolved.length
+      if Array.isArray(resolved[i])
+        #console.log(resolved[i])
+        #process.exit(1)
+        _fe.resolvedParser(resolved[i], stamp, newNode)
+      else
+        cloned = cheerio.load('<body></body>')
+        cloned('*').first().append(stamp.clone())
+        
+        if _fe.findOpenComments(cloned)
+          _fe.recurse(cloned,resolved[i])          
+        
 
-  newNode
+        insert.recurse(cloned, resolved[i])
+        newNode.append(cloned.html())
+      i++
+
+    fullSet.replaceWith(newNode.find('body').contents())
 
 
 _fe.recurse = ($, ctx) ->
@@ -47,19 +60,11 @@ _fe.recurse = ($, ctx) ->
         _fe.openRegexp,
         _fe.closeRegexp,
         (fullSet)->
-          resolved = _fe.resolve(fullSet.get(0), ctx)
+          _fe.resolvedParser(
+            fullSet,
+            ctx
+          )
 
-          if not resolved
-            fullSet.remove()
-          else
-            stamp = fullSet.slice(1,-2)
-            newNode = _fe.resolvedParser(
-              resolved,
-              stamp, 
-              cheerio.load('<body></body>')('*').first()
-            )
-
-            fullSet.replaceWith(newNode.find('body').contents())
         , true
       )
 
@@ -73,17 +78,16 @@ _fe.recurse = ($, ctx) ->
 _fe.resolve = (el, ctx) ->
   data = el.data.trim()
   _var = data.replace(_fe.openRegexp, '$1')
-
+  
   if /\w\.\w/i.test(_var)
     _var = _var.split('.')
-    for sub in _var.slice(0,-1)
+    for sub in _var
       if ctx[sub]
         ctx = ctx[sub]
       else
         return false
     
     _var = _var.slice(-1)[0]
-    
     return ctx.map((i) ->
       i[_var]
     )

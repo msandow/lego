@@ -2,11 +2,10 @@ require('mocha')
 expect = require('chai').expect
 hapi = require('hapi')
 request = require('request')
+config = require(__dirname + '/config.coffee')
 
 lego = require(__dirname + '/../lego.js')
 server = new hapi.Server()
-
-port = 8000
 
 
 describe('Insert', ->
@@ -14,7 +13,7 @@ describe('Insert', ->
 
   before(()->
     server.connection(
-      port: 8000
+      port: config.port
     )
 
     lego.attach(server, __dirname + '/templates/')
@@ -70,8 +69,8 @@ describe('Insert', ->
   )
   
   it('Should insert vars - string', (done)->
-    request('http://localhost:8000', (err, response, body)->
-      expect(body).to.equal("""
+    request('http://localhost:'+config.port, (err, response, body)->
+      expect(config.cleanHTML(body)).to.equal(config.cleanHTML("""
       <!DOCTYPE html>
       <html lang="en">
         <head>
@@ -80,14 +79,14 @@ describe('Insert', ->
         </head>
         <body>
           <h1>Header</h1>
-      <!-- foo bar -->
-      <p>Foo</p>
-      <span><i class="classy">Text</i></span>
-      <h1>Header</h1>
-      <!-- foo bar -->
+          <!-- foo bar -->
+            <p>Foo</p>
+            <span><i class="classy">Text</i></span>
+            <h1>Header</h1>
+          <!-- foo bar -->
         </body>
       </html>
-      """)
+      """))
       
       done()
     )  
@@ -95,8 +94,8 @@ describe('Insert', ->
   
   
   it('Should insert vars - array', (done)->
-    request('http://localhost:8000/2', (err, response, body)->
-      expect(body).to.equal("""
+    request('http://localhost:'+config.port+'/2', (err, response, body)->
+      expect(config.cleanHTML(body)).to.equal(config.cleanHTML("""
       <!DOCTYPE html>
       <html lang="en">
         <head>
@@ -105,22 +104,22 @@ describe('Insert', ->
         </head>
         <body>
           <h1>Header</h1>
-      <!-- foo bar -->
-      <p>Foo</p>
-      <span>[1,2,3]</span>
-      <h1>Header</h1>
-      <!-- foo bar -->
+          <!-- foo bar -->
+            <p>Foo</p>
+            <span>[1,2,3]</span>
+            <h1>Header</h1>
+          <!-- foo bar -->
         </body>
       </html>
-      """)
+      """))
       
       done()
     )  
   )
   
   it('Should insert vars - object', (done)->
-    request('http://localhost:8000/3', (err, response, body)->
-      expect(body).to.equal("""
+    request('http://localhost:'+config.port+'/3', (err, response, body)->
+      expect(config.cleanHTML(body)).to.equal(config.cleanHTML("""
       <!DOCTYPE html>
       <html lang="en">
         <head>
@@ -129,14 +128,14 @@ describe('Insert', ->
         </head>
         <body>
           <h1>Header</h1>
-      <!-- foo bar -->
-      <p>Foo</p>
-      <span>{&quot;stuff&quot;:&quot;bar&quot;}</span>
-      <h1>Header</h1>
-      <!-- foo bar -->
+          <!-- foo bar -->
+            <p>Foo</p>
+            <span>{&quot;stuff&quot;:&quot;bar&quot;}</span>
+            <h1>Header</h1>
+          <!-- foo bar -->
         </body>
       </html>
-      """)
+      """))
       
       done()
     )  

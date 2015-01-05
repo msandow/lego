@@ -2,11 +2,11 @@ require('mocha')
 expect = require('chai').expect
 hapi = require('hapi')
 request = require('request')
+config = require(__dirname + '/config.coffee')
 
 lego = require(__dirname + '/../lego.js')
 server = new hapi.Server()
 
-port = 8000
 
 
 describe('If', ->
@@ -14,7 +14,7 @@ describe('If', ->
 
   before(()->
     server.connection(
-      port: 8000
+      port: config.port
     )
 
     lego.attach(server, __dirname + '/templates/')
@@ -79,8 +79,8 @@ describe('If', ->
   )
   
   it('Should not include header', (done)->
-    request('http://localhost:8000', (err, response, body)->
-      expect(body).to.equal("""
+    request('http://localhost:'+config.port, (err, response, body)->
+      expect(config.cleanHTML(body)).to.equal(config.cleanHTML("""
       <!DOCTYPE html>
       <html lang="en">
         <head>
@@ -88,48 +88,38 @@ describe('If', ->
           <title>Lego Test</title>
         </head>
         <body>
-          
-          
-          
-            <p>Bar</p>
-          
+          <p>Bar</p>
         </body>
       </html>
-      """)
+      """))
       
       done()
     )  
   )
   
   it('Should include header', (done)->
-    request('http://localhost:8000/2', (err, response, body)->
-      expect(body).to.equal("""
+    request('http://localhost:'+config.port+'/2', (err, response, body)->
+      expect(config.cleanHTML(body)).to.equal(config.cleanHTML("""
       <!DOCTYPE html>
       <html lang="en">
         <head>
           <meta charset="utf-8">
           <title>Lego Test</title>
         </head>
-        <body>
-          
-            
-              <h1>Header</h1>
-      <!-- foo bar -->
-            
-          
-          
-          
+        <body>  
+          <h1>Header</h1>
+          <!-- foo bar -->
         </body>
       </html>
-      """)
+      """))
       
       done()
     )  
   )
   
   it('Should handle mixed ifs / notifs - negative', (done)->
-    request('http://localhost:8000/3', (err, response, body)->
-      expect(body).to.equal("""
+    request('http://localhost:'+config.port+'/3', (err, response, body)->
+      expect(config.cleanHTML(body)).to.equal(config.cleanHTML("""
       <!DOCTYPE html>
       <html lang="en">
         <head>
@@ -137,20 +127,17 @@ describe('If', ->
           <title>Lego Test</title>
         </head>
         <body>
-          
-            
-          
         </body>
       </html>
-      """)
+      """))
       
       done()
     )  
   )
   
   it('Should handle mixed ifs / notifs - positive', (done)->
-    request('http://localhost:8000/4', (err, response, body)->
-      expect(body).to.equal("""
+    request('http://localhost:'+config.port+'/4', (err, response, body)->
+      expect(config.cleanHTML(body)).to.equal(config.cleanHTML("""
       <!DOCTYPE html>
       <html lang="en">
         <head>
@@ -158,10 +145,9 @@ describe('If', ->
           <title>Lego Test</title>
         </head>
         <body>
-          
         </body>
       </html>
-      """)
+      """))
       
       done()
     )  
