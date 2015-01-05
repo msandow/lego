@@ -49,6 +49,21 @@ describe('Foreach', ->
           failAction: 'ignore'
     )
     
+    server.route(
+      method: 'GET'
+      path: '/3'
+      handler: (request, reply) ->
+        reply.view('main_foreach_2',
+          users: [
+            {name: 'Bob',  roles: ['role1', 'role2']}
+          ]
+        )
+      config:
+        state:
+          parse: false
+          failAction: 'ignore'
+    )
+    
     server.start()
   )
   
@@ -66,7 +81,10 @@ describe('Foreach', ->
           <title>Lego Test</title>
         </head>
         <body>
-          <img><img><img>
+          
+            <img>
+            <img>
+            <img>
           
           
         </body>
@@ -98,5 +116,28 @@ describe('Foreach', ->
     )  
   )
 
-
+  it('Should insert sub tags', (done)->
+    request('http://localhost:8000/3', (err, response, body)->
+      expect(body).to.equal("""
+    <!DOCTYPE html>
+    <html lang="en">
+      <head>
+        <meta charset="utf-8">
+        <title>Lego Test</title>
+      </head>
+      <body>
+        
+          <p>
+            <b>Name:</b>Bob
+            
+              <br><span>role1</span>
+              <br><span>role2</span>
+          </p>
+      </body>
+    </html>
+      """)
+      
+      done()
+    )  
+  )
 )

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Lego Test</title>
+  </head>
+  <body>
+    <!-- lego::foreach users -->
+      <p>
+        <b>Name:</b><!-- lego::insert name -->
+        <!-- lego::foreach roles -->
+          <br/><span><!-- lego::insert $this --></span>
+        <!-- lego::endforeach -->
+      </p>
+    <!-- lego::endforeach -->
+  </body>
+</html>

@@ -28,7 +28,12 @@ insert.recurse = ($, ctx) ->
 
 insert.resolve = (el, ctx) ->
   fetchVar = (_var) ->
-    if ctx[_var]
+    if _var is '$this'
+      if Array.isArray(ctx) or typeof ctx is 'object'
+        return JSON.stringify(ctx)
+      else
+        return ctx
+    else if ctx[_var]
       if Array.isArray(ctx[_var]) or typeof ctx[_var] is 'object'
         return JSON.stringify(ctx[_var])
       else

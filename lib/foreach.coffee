@@ -16,6 +16,23 @@ _fe.findCloseComments = ($) ->
     el.type is 'comment' and _fe.closeRegexp.test(el.data.trim())
   )
 
+_fe.resolvedParser = (resolved, stamp, newNode) ->
+  i = 0
+  
+  while i < resolved.length
+    if Array.isArray(resolved[i])
+      _fe.resolvedParser(resolved[i], stamp, newNode)
+    else
+      cloned = cheerio.load('<body></body>')
+      cloned('*').first().append(stamp.clone())
+
+      insert.recurse(cloned, resolved[i])
+      newNode.append(cloned.html())
+    i++
+
+  newNode
+
+
 _fe.recurse = ($, ctx) ->
   fes = _fe.findOpenComments($)
   efes = _fe.findCloseComments($)
@@ -36,18 +53,14 @@ _fe.recurse = ($, ctx) ->
             fullSet.remove()
           else
             stamp = fullSet.slice(1,-2)
-            newNode = cheerio.load('<div></div>')('*').first()
+            newNode = _fe.resolvedParser(
+              resolved,
+              stamp, 
+              cheerio.load('<body></body>')('*').first()
+            )
 
-            i = 0
-            while i < resolved.length
-              cloned = cheerio.load('<div></div>')
-              cloned('*').first().append(stamp.clone())
-
-              insert.recurse(cloned, resolved[i])
-              newNode.append(cloned('*').contents())
-              i++
-            
-            fullSet.replaceWith(newNode.children())
+            fullSet.replaceWith(newNode.find('body').contents())
+        , true
       )
 
       if _fe.findOpenComments($).length
@@ -58,11 +71,27 @@ _fe.recurse = ($, ctx) ->
   $
 
 _fe.resolve = (el, ctx) ->
-  _var = el.data.trim().replace(_fe.openRegexp, '$1')
+  data = el.data.trim()
+  _var = data.replace(_fe.openRegexp, '$1')
 
-  if ctx[_var] and Array.isArray(ctx[_var]) and ctx[_var].length > 0
-    return ctx[_var]
+  if /\w\.\w/i.test(_var)
+    _var = _var.split('.')
+    for sub in _var.slice(0,-1)
+      if ctx[sub]
+        ctx = ctx[sub]
+      else
+        return false
+    
+    _var = _var.slice(-1)[0]
+    
+    return ctx.map((i) ->
+      i[_var]
+    )
+
   else
-    return false
+    if ctx[_var] and Array.isArray(ctx[_var]) and ctx[_var].length > 0
+      return ctx[_var]
+    else
+      return false
 
 module.exports = _fe
