@@ -96,6 +96,21 @@ describe('Foreach', ->
           failAction: 'ignore'
     )
     
+    server.route(
+      method: 'GET'
+      path: '/5'
+      handler: (request, reply) ->
+        reply.view('main_foreach_4',
+          name: 'Billy'
+          includes: [1,1,1]
+          stuff: ['<hr/>','<hr/>','<hr/>']
+        )
+      config:
+        state:
+          parse: false
+          failAction: 'ignore'
+    )
+    
     server.start()
   )
   
@@ -189,6 +204,36 @@ describe('Foreach', ->
               <u>3</u>
               <u>4</u>
             </p>
+          </div>
+        </body>
+      </html>
+      """))
+      
+      done()
+    )  
+  )
+  
+  it('Should insert same level tags', (done)->
+    request('http://localhost:'+config.port+'/5', (err, response, body)->
+      expect(config.cleanHTML(body)).to.equal(config.cleanHTML("""
+      <!DOCTYPE html>
+      <html lang="en">
+        <head>
+          <meta charset="utf-8">
+          <title>Lego Test</title>
+        </head>
+        <body>
+          <div>
+            <p>Billy</p>
+            <h1>Header</h1>
+            <!-- foo bar -->
+            <h1>Header</h1>
+            <!-- foo bar -->
+            <h1>Header</h1>
+            <!-- foo bar -->
+            <hr>
+            <hr>
+            <hr>
           </div>
         </body>
       </html>

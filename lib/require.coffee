@@ -30,9 +30,12 @@ req.recurse = ($, ctx, root, finished) ->
           fs.exists(absPath, (exists)->
             if not exists
               console.warn('Template',absPath,'not found')
+              console.log(req.fetchedTemplates[absPath])
+              process.exit(1)
               cb(null, req.fetchedTemplates[absPath])
             else
               ext = path.extname(absPath)
+
               switch ext
                 when '.html'
                   fs.readFile(absPath, (err, data) ->
@@ -55,6 +58,10 @@ req.recurse = ($, ctx, root, finished) ->
                           req.fetchedTemplates[absPath] = resp
                           cb(null, req.fetchedTemplates[absPath])
                         )
+                else
+                  console.warn('Extension missing from',absPath)
+                  cb(null, req.fetchedTemplates[absPath])
+                  
           )
         else
           cb(null, fetchedTemplates[absPath])
@@ -63,7 +70,7 @@ req.recurse = ($, ctx, root, finished) ->
     async.parallel(includePaths, (err, results) ->
       includes.each((i, el)->
         absPath = req.resolve(el, root)
-        if req.fetchedTemplates[absPath]
+        if req.fetchedTemplates[absPath] isnt undefined
           $(el).replaceWith($(req.fetchedTemplates[absPath]))
       )
 
