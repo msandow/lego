@@ -28,18 +28,16 @@ _fe.resolvedParser = (fullSet, ctx) ->
 
     while i < resolved.length
       if Array.isArray(resolved[i])
-        #console.log(resolved[i])
-        #process.exit(1)
         _fe.resolvedParser(resolved[i], stamp, newNode)
       else
         cloned = cheerio.load('<body></body>')
         cloned('*').first().append(stamp.clone())
-        
+
         if _fe.findOpenComments(cloned)
           _fe.recurse(cloned,resolved[i])          
         
 
-        insert.recurse(cloned, resolved[i])
+        insert.recurse(cloned, resolved[i], ctx)
         newNode.append(cloned.html())
       i++
 

@@ -111,6 +111,20 @@ describe('Foreach', ->
           failAction: 'ignore'
     )
     
+    server.route(
+      method: 'GET'
+      path: '/6'
+      handler: (request, reply) ->
+        reply.view('main_foreach_root',
+          foo:'string'
+          arr: [1,2,3,4]
+        )
+      config:
+        state:
+          parse: false
+          failAction: 'ignore'
+    )
+    
     server.start()
   )
   
@@ -235,6 +249,28 @@ describe('Foreach', ->
             <hr>
             <hr>
           </div>
+        </body>
+      </html>
+      """))
+      
+      done()
+    )  
+  )
+  
+  it('Should insert root level values', (done)->
+    request('http://localhost:'+config.port+'/6', (err, response, body)->
+      expect(config.cleanHTML(body)).to.equal(config.cleanHTML("""
+      <!DOCTYPE html>
+      <html lang="en">
+        <head>
+          <meta charset="utf-8">
+          <title>Lego Test</title>
+        </head>
+        <body>
+          <span>string</span>
+          <span>string</span>
+          <span>string</span>
+          <span>string</span>
         </body>
       </html>
       """))

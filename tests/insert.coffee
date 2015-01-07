@@ -61,6 +61,21 @@ describe('Insert', ->
           failAction: 'ignore'
     )
     
+    server.route(
+      method: 'GET'
+      path: '/4'
+      handler: (request, reply) ->
+        reply.view('main_nested',
+          foo: 'foo' 
+          bar:
+            baz: 'baz'
+        )
+      config:
+        state:
+          parse: false
+          failAction: 'ignore'
+    )
+    
     server.start()
   )
   
@@ -133,6 +148,26 @@ describe('Insert', ->
             <span>{&quot;stuff&quot;:&quot;bar&quot;}</span>
             <h1>Header</h1>
           <!-- foo bar -->
+        </body>
+      </html>
+      """))
+      
+      done()
+    )  
+  )
+  
+  it('Should insert vars - nested', (done)->
+    request('http://localhost:'+config.port+'/4', (err, response, body)->
+      expect(config.cleanHTML(body)).to.equal(config.cleanHTML("""
+      <!DOCTYPE html>
+      <html lang="en">
+        <head>
+          <meta charset="utf-8">
+          <title>Lego Test</title>
+        </head>
+        <body>
+          <p>foo</p>
+          <p>baz</p>
         </body>
       </html>
       """))
