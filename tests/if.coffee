@@ -180,6 +180,7 @@ describe('If', ->
           <p>Bar</p>
           <p>Bar1</p>
           <p>Bar2</p>
+          <p>Bar3</p>
         </body>
       </html>
       """))
