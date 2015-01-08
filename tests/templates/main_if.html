@@ -14,5 +14,15 @@
     <!-- lego::notif showHeader -->
       <p>Bar</p>
     <!-- lego::endif -->
+    
+    <!-- lego::if comp -->
+      <!-- lego::if arr.length is comp -->
+        <p>Bar1</p>
+      <!-- lego::endif -->
+      
+      <!-- lego::if arr.length is 3 -->
+        <p>Bar2</p>
+      <!-- lego::endif -->
+    <!-- lego::endif -->
   </body>
 </html>

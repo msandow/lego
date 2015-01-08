@@ -14,5 +14,17 @@
     <!-- lego::foreach arr.arr -->
       <!-- lego::insert $this -->
     <!-- lego::endforeach -->
+    
+    <!-- lego::foreach arr.arr -->
+      <!-- lego::if $root.arr2 -->
+        <!-- lego::insert $this -->
+      <!-- lego::endif -->
+    <!-- lego::endforeach -->
+    
+    <!-- lego::foreach arr.arr -->
+      <!-- lego::if $root.arr -->
+        <!-- lego::insert $this -->
+      <!-- lego::endif -->
+    <!-- lego::endforeach -->
   </body>
 </html>

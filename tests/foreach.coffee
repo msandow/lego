@@ -309,7 +309,7 @@ describe('Foreach', ->
         <body>
           <p><b>hello</b>world</p>
           <p><b>foo</b>{&quot;bar&quot;:true}</p>
-          123
+          123123
         </body>
       </html>
       """))

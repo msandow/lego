@@ -71,6 +71,20 @@ describe('If', ->
           failAction: 'ignore'
     )
     
+    server.route(
+      method: 'GET'
+      path: '/5'
+      handler: (request, reply) ->
+        reply.view('main_if',
+          arr: [0,0,0]
+          comp: 3
+        )
+      config:
+        state:
+          parse: false
+          failAction: 'ignore'
+    )
+    
     server.start()
   )
   
@@ -145,6 +159,27 @@ describe('If', ->
           <title>Lego Test</title>
         </head>
         <body>
+        </body>
+      </html>
+      """))
+      
+      done()
+    )  
+  )
+  
+  it('Should handle complex ifs', (done)->
+    request('http://localhost:'+config.port+'/5', (err, response, body)->
+      expect(config.cleanHTML(body)).to.equal(config.cleanHTML("""
+      <!DOCTYPE html>
+      <html lang="en">
+        <head>
+          <meta charset="utf-8">
+          <title>Lego Test</title>
+        </head>
+        <body>
+          <p>Bar</p>
+          <p>Bar1</p>
+          <p>Bar2</p>
         </body>
       </html>
       """))

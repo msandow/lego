@@ -39,7 +39,7 @@ _fe.resolvedParser = (fullSet, ctx) ->
         
 
         insert.recurse(cloned, resolved[i], ctx)
-        _if.recurse(cloned, resolved[i])
+        _if.recurse(cloned, resolved[i], ctx)
         newNode.append(cloned.html())
       i++
 
