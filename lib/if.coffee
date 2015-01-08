@@ -1,7 +1,7 @@
 pairs = require(__dirname + '/pairs.coffee')
 
 _if = 
-  openRegexp: new RegExp('lego::(if|notif)\\s+(.*?)', 'i')
+  openRegexp: new RegExp('lego::(if|notif)\\s+([^\\s]*?)\\s*([^\\s]*?)', 'i')
   closeRegexp: new RegExp('lego::endif\\s*', 'i')
 
 _if.findOpenComments = ($) ->

@@ -1,6 +1,7 @@
 pairs = require(__dirname + '/pairs.coffee')
 cheerio = require('cheerio')
 insert = require(__dirname + '/insert.coffee')
+_if = require(__dirname + '/if.coffee')
 
 _fe = 
   openRegexp: new RegExp('lego::foreach\\s+(.*?)', 'i')
@@ -38,6 +39,7 @@ _fe.resolvedParser = (fullSet, ctx) ->
         
 
         insert.recurse(cloned, resolved[i], ctx)
+        _if.recurse(cloned, resolved[i])
         newNode.append(cloned.html())
       i++
 
@@ -62,8 +64,6 @@ _fe.recurse = ($, ctx) ->
             fullSet,
             ctx
           )
-
-        , true
       )
 
       if _fe.findOpenComments($).length
@@ -77,6 +77,8 @@ _fe.resolve = (el, ctx) ->
   data = el.data.trim()
   _var = data.replace(_fe.openRegexp, '$1')
   
+  #console.log(_var, ctx[_var])
+  
   if /\w\.\w/i.test(_var)
     _var = _var.split('.')
     for sub in _var
@@ -85,14 +87,17 @@ _fe.resolve = (el, ctx) ->
       else
         return false
     
-    _var = _var.slice(-1)[0]
-    return ctx.map((i) ->
-      i[_var]
-    )
-
+    return ctx
   else
     if ctx[_var] and Array.isArray(ctx[_var]) and ctx[_var].length > 0
       return ctx[_var]
+    else if typeof ctx[_var] is 'object'
+      newArr = []
+      
+      for own k,v of ctx[_var]
+        newArr.push({'$key':k, '$value':v})
+      
+      return newArr
     else
       return false
 

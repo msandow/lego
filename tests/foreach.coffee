@@ -125,6 +125,24 @@ describe('Foreach', ->
           failAction: 'ignore'
     )
     
+    server.route(
+      method: 'GET'
+      path: '/7'
+      handler: (request, reply) ->
+        reply.view('main_foreach_object',
+          obj:
+            'hello':'world'
+            'foo':
+              'bar':true
+          arr:
+            arr:[1,2,3]
+        )
+      config:
+        state:
+          parse: false
+          failAction: 'ignore'
+    )
+    
     server.start()
   )
   
@@ -271,6 +289,27 @@ describe('Foreach', ->
           <span>string</span>
           <span>string</span>
           <span>string</span>
+        </body>
+      </html>
+      """))
+      
+      done()
+    )  
+  )
+  
+  it('Should insert object iterations', (done)->
+    request('http://localhost:'+config.port+'/7', (err, response, body)->
+      expect(config.cleanHTML(body)).to.equal(config.cleanHTML("""
+      <!DOCTYPE html>
+      <html lang="en">
+        <head>
+          <meta charset="utf-8">
+          <title>Lego Test</title>
+        </head>
+        <body>
+          <p><b>hello</b>world</p>
+          <p><b>foo</b>{&quot;bar&quot;:true}</p>
+          123
         </body>
       </html>
       """))

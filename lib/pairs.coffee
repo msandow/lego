@@ -1,4 +1,4 @@
-module.exports = (root, $, ctx, openingTag, closingTag, topLevelResolver, subLevelResolver = false) ->
+module.exports = (root, $, ctx, openingTag, closingTag, topLevelResolver) ->
   
   isOpenSection = (i) ->
     i.type is 'comment' and openingTag.test(i.data.trim())
