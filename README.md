@@ -39,7 +39,7 @@ In both instances, `'path_to_my/templates/'` points to the directory where your 
 To invoke a view on a request to specific path, simply use the server-specific method of replying with your specific template file inside your configured templates directory (let's pretend you have a file who's path is `'path_to_my/templates/users.html'`:
 
 ```javascript
-# Hapi server implementation
+// Hapi server implementation
 server.route({
   'method': 'GET',
   'path': '/users',
@@ -48,7 +48,7 @@ server.route({
   }
 });
 
-# Express server implementation
+// Express server implementation
 app.get('/users', function(req, res){
   res.render('users');
 });
@@ -103,3 +103,6 @@ Renders this...
 ```
 
 Be aware that using the `define` method essentially extends the context object fed to the `view`/`render` method with a new key matching the string provided. So it's possible to override any values in that object that have the same name.
+
+
+### Foreach
