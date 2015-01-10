@@ -75,7 +75,9 @@ _if.resolve = (el, ctx, rootctx) ->
       else
         state = traverse(arr, ctx)
     else
-      if ctx[_var]
+      if _var is '$this'
+        state = ctx
+      else if ctx[_var]
         state = ctx[_var]
       else
         state = false

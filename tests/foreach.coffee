@@ -1,158 +1,13 @@
-require('mocha')
-expect = require('chai').expect
-hapi = require('hapi')
-request = require('request')
 config = require(__dirname + '/config.coffee')
 
-lego = require(__dirname + '/../lego.js')
-server = new hapi.Server()
-
-describe('Foreach', ->
-  server = new hapi.Server()
-
-  before(()->
-    server.connection(
-      port: config.port
-    )
-
-    lego.attach(server, __dirname + '/templates/')
-
-    server.route(
-      method: 'GET'
-      path: '/'
-      handler: (request, reply) ->
-        reply.view('main_foreach_1',
-          arr: [1,2,3]
-        )
-      config:
-        state:
-          parse: false
-          failAction: 'ignore'
-    )
-    
-    server.route(
-      method: 'GET'
-      path: '/2'
-      handler: (request, reply) ->
-        reply.view('main_foreach_1',
-          obs: [
-            {src: 'foo.jpg'},
-            {src: 'bar.png'},
-            {src: 'baz.gif'}
-          ]
-        )
-      config:
-        state:
-          parse: false
-          failAction: 'ignore'
-    )
-    
-    server.route(
-      method: 'GET'
-      path: '/3'
-      handler: (request, reply) ->
-        reply.view('main_foreach_2',
-          users: [
-            {name: 'Bob',  roles: ['role1', 'role2']}
-          ]
-        )
-      config:
-        state:
-          parse: false
-          failAction: 'ignore'
-    )
-    
-    server.route(
-      method: 'GET'
-      path: '/4'
-      handler: (request, reply) ->
-        reply.view('main_foreach_3',
-          foo:[
-            {
-              bar:[
-                {
-                  baz:[
-                    {text:1},
-                    {text:2}
-                  ]
-                }
-              ]
-            },
-            {
-              bar:[
-                {
-                  baz:[
-                    {text:3},
-                    {text:4}
-                  ]
-                }
-              ]
-            }
-          ]            
-        )
-      config:
-        state:
-          parse: false
-          failAction: 'ignore'
-    )
-    
-    server.route(
-      method: 'GET'
-      path: '/5'
-      handler: (request, reply) ->
-        reply.view('main_foreach_4',
-          name: 'Billy'
-          includes: [1,1,1]
-          stuff: ['<hr/>','<hr/>','<hr/>']
-        )
-      config:
-        state:
-          parse: false
-          failAction: 'ignore'
-    )
-    
-    server.route(
-      method: 'GET'
-      path: '/6'
-      handler: (request, reply) ->
-        reply.view('main_foreach_root',
-          foo:'string'
-          arr: [1,2,3,4]
-        )
-      config:
-        state:
-          parse: false
-          failAction: 'ignore'
-    )
-    
-    server.route(
-      method: 'GET'
-      path: '/7'
-      handler: (request, reply) ->
-        reply.view('main_foreach_object',
-          obj:
-            'hello':'world'
-            'foo':
-              'bar':true
-          arr:
-            arr:[1,2,3]
-        )
-      config:
-        state:
-          parse: false
-          failAction: 'ignore'
-    )
-    
-    server.start()
-  )
-  
-  after(()->
-    server.stop()
-  )
-  
-  it('Should iterate three times', (done)->
-    request('http://localhost:'+config.port, (err, response, body)->
-      expect(config.cleanHTML(body)).to.equal(config.cleanHTML("""
+suite =
+  suiteName: 'Foreach'
+  tests:[
+    name: 'Should iterate three times'
+    file: 'main_foreach_1'
+    ctx:
+      arr: [1,2,3]
+    expected: """
       <!DOCTYPE html>
       <html lang="en">
         <head>
@@ -165,15 +20,17 @@ describe('Foreach', ->
           <img>
         </body>
       </html>
-      """))
-      
-      done()
-    )  
-  )
-  
-  it('Should insert three attributes', (done)->
-    request('http://localhost:'+config.port+'/2', (err, response, body)->
-      expect(config.cleanHTML(body)).to.equal(config.cleanHTML("""
+      """
+  ,
+    name: 'Should insert three attributes'
+    file: 'main_foreach_1'
+    ctx:
+      obs: [
+        {src: 'foo.jpg'},
+        {src: 'bar.png'},
+        {src: 'baz.gif'}
+      ]
+    expected: """
       <!DOCTYPE html>
       <html lang="en">
         <head>
@@ -186,38 +43,57 @@ describe('Foreach', ->
           <img src="baz.gif">
         </body>
       </html>
-      """))
-      
-      done()
-    )  
-  )
-
-  it('Should insert sub tags', (done)->
-    request('http://localhost:'+config.port+'/3', (err, response, body)->
-      expect(config.cleanHTML(body)).to.equal(config.cleanHTML("""
-    <!DOCTYPE html>
-    <html lang="en">
-      <head>
-        <meta charset="utf-8">
-        <title>Lego Test</title>
-      </head>
-      <body>
-        <p>
-          <b>Name:</b>Bob
-          <br><span>role1</span>
-          <br><span>role2</span>
-        </p>
-      </body>
-    </html>
-      """))
-      
-      done()
-    )  
-  )
-  
-  it('Should insert sub tags', (done)->
-    request('http://localhost:'+config.port+'/4', (err, response, body)->
-      expect(config.cleanHTML(body)).to.equal(config.cleanHTML("""
+      """
+  ,
+    name: 'Should insert sub tags'
+    file: 'main_foreach_2'
+    ctx:
+      users: [
+        {name: 'Bob',  roles: ['role1', 'role2']}
+      ]
+    expected: """
+      <!DOCTYPE html>
+      <html lang="en">
+        <head>
+          <meta charset="utf-8">
+          <title>Lego Test</title>
+        </head>
+        <body>
+          <p>
+            <b>Name:</b>Bob
+            <br><span>role1</span>
+            <br><span>role2</span>
+          </p>
+        </body>
+      </html>
+      """
+  ,
+    name: 'Should insert sub tags multiple levels'
+    file: 'main_foreach_3'
+    ctx:
+      foo:[
+        {
+          bar:[
+            {
+              baz:[
+                {text:1},
+                {text:2}
+              ]
+            }
+          ]
+        },
+        {
+          bar:[
+            {
+              baz:[
+                {text:3},
+                {text:4}
+              ]
+            }
+          ]
+        }
+      ]
+    expected: """
       <!DOCTYPE html>
       <html lang="en">
         <head>
@@ -239,15 +115,15 @@ describe('Foreach', ->
           </div>
         </body>
       </html>
-      """))
-      
-      done()
-    )  
-  )
-  
-  it('Should insert same level tags', (done)->
-    request('http://localhost:'+config.port+'/5', (err, response, body)->
-      expect(config.cleanHTML(body)).to.equal(config.cleanHTML("""
+      """
+  ,
+    name: 'Should insert same level tags'
+    file: 'main_foreach_4'
+    ctx:
+      name: 'Billy'
+      includes: [1,1,1]
+      stuff: ['<hr/>','<hr/>','<hr/>']
+    expected: """
       <!DOCTYPE html>
       <html lang="en">
         <head>
@@ -269,15 +145,14 @@ describe('Foreach', ->
           </div>
         </body>
       </html>
-      """))
-      
-      done()
-    )  
-  )
-  
-  it('Should insert root level values', (done)->
-    request('http://localhost:'+config.port+'/6', (err, response, body)->
-      expect(config.cleanHTML(body)).to.equal(config.cleanHTML("""
+      """
+  ,
+    name: 'Should insert root level values'
+    file: 'main_foreach_root'
+    ctx:
+      foo:'string'
+      arr: [1,2,3,4]
+    expected: """
       <!DOCTYPE html>
       <html lang="en">
         <head>
@@ -288,18 +163,20 @@ describe('Foreach', ->
           <span>string</span>
           <span>string</span>
           <span>string</span>
-          <span>string</span>
         </body>
       </html>
-      """))
-      
-      done()
-    )  
-  )
-  
-  it('Should insert object iterations', (done)->
-    request('http://localhost:'+config.port+'/7', (err, response, body)->
-      expect(config.cleanHTML(body)).to.equal(config.cleanHTML("""
+      """
+  ,
+    name: 'Should insert object iterations'
+    file: 'main_foreach_object'
+    ctx:
+      obj:
+        'hello':'world'
+        'foo':
+          'bar':true
+      arr:
+        arr:[1,2,3]
+    expected: """
       <!DOCTYPE html>
       <html lang="en">
         <head>
@@ -312,9 +189,7 @@ describe('Foreach', ->
           123123
         </body>
       </html>
-      """))
-      
-      done()
-    )  
-  )
-)
+      """
+  ]
+
+config.buildSuite(suite)

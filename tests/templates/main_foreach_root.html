@@ -6,7 +6,9 @@
   </head>
   <body>
     <!-- lego::foreach arr -->
-      <span><!-- lego::insert $root.foo --></span>
+      <!-- lego::if $this isnt 2 -->
+        <span><!-- lego::insert $root.foo --></span>
+      <!-- lego::endif -->
     <!-- lego::endforeach -->
   </body>
 </html>
