@@ -62,7 +62,7 @@ ___
 
 
 ### Define
-<div style="padding:0px 0px 10px 30px;">
+
 Define custom snippets of HTML inside templates to include with insert command
 
 **Examples:**
@@ -103,4 +103,3 @@ Renders this...
 ```
 
 Be aware that using the `define` method essentially extends the context object fed to the `view`/`render` method with a new key matching the string provided. So it's possible to override any values in that object that have the same name.
-<div>
