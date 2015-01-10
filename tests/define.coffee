@@ -18,6 +18,8 @@ suite =
           <table class="1"></table>
           <table class="2"></table>
           <table class="3"></table>
+          
+          <div><p>Hello</p></div>
         </body>
       </html>
       """
