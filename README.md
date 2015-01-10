@@ -3,6 +3,7 @@
 Hapi *( >= 8)* and Express *( >= 4 )* HTML templating for files with .html extension.
 
 [Server Implentation](#setup)
+
 [View Templating Methods](#methods)
 
 ___
