@@ -61,11 +61,13 @@ ___
 ## View Templating Methods
 
 
-### Define
+### - Define
 
-Define custom snippets of HTML inside templates to include with insert command
+Define custom snippets of HTML inside templates to include with insert command.
 
 **Examples:**
+
+<p>&nbsp;</p>
 
 This defines a context-less block of code to be inserted anywhere
 
@@ -73,36 +75,55 @@ This defines a context-less block of code to be inserted anywhere
 <!-- lego::define customTemplate -->
   <div class="someBlockClass"></div>
 <!-- lego::enddefine -->
+```
 
 Which when inserted like this...
 
+```html
 <!-- lego::insert customTemplate -->
+```
 
 Renders this...
 
+```html
 <div class="someBlockClass"></div>
 ```
+
+<p>&nbsp;</p>
+
 This defines a block of code with a context, who's context will only be resolved when actually inserted
 
 ```html
 <!-- lego::define customTemplate -->
   <div class="<!-- lego::insert $this -->"></div>
 <!-- lego::enddefine -->
+```
 
-When inserted inside a foreach call on an context that looks like {arr: [1, 2, 3]}...
+When inserted inside a foreach call on an context that looks like `{arr: [1, 2, 3]}`...
 
+```html
 <!-- lego::foreach arr -->
     <!-- lego::insert customTemplate -->
 <!-- lego::endforeach -->
+```
 
 Renders this...
 
+```html
 <div class="1"></div>
 <div class="2"></div>
 <div class="3"></div>
 ```
 
+<p>&nbsp;</p>
+
 Be aware that using the `define` method essentially extends the context object fed to the `view`/`render` method with a new key matching the string provided. So it's possible to override any values in that object that have the same name.
 
 
-### Foreach
+### - Foreach
+
+Iterate through arrays or objects, with the content of each of the loops being the single array element, or the single key/value pair in an object.
+
+**Examples:**
+
+<p>&nbsp;</p>
