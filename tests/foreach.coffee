@@ -18,6 +18,7 @@ suite =
           <img>
           <img>
           <img>
+          <div></div>
         </body>
       </html>
       """
@@ -38,9 +39,11 @@ suite =
           <title>Lego Test</title>
         </head>
         <body>
-          <img src="foo.jpg">
-          <img src="bar.png">
-          <img src="baz.gif">
+          <div>
+            <img src="foo.jpg">
+            <img src="bar.png">
+            <img src="baz.gif">
+          </div>
         </body>
       </html>
       """

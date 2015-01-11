@@ -37,14 +37,14 @@ _fe.resolvedParser = (fullSet, ctx) ->
 
         if _fe.findOpenComments(cloned)
           _fe.recurse(cloned,resolved[i])          
-        
 
         insert.recurse(cloned, resolved[i])
         _if.recurse(cloned, resolved[i])
-        newNode.append(cloned.html())
+
+        newNode.append(cloned('body').html())
       i++
 
-    fullSet.replaceWith(newNode.find('body').contents())
+    fullSet.replaceWith(newNode.contents())
 
 
 _fe.recurse = ($, ctx) ->

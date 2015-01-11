@@ -1,6 +1,6 @@
 # Lego
 
-Hapi *( >= 8)* and Express *( >= 4 )* HTML templating for files with .html extension. Similiar to Handlebars in its features, Lego allows for doing server-side includes of static HTML files, or other JS files that return strings. Think Handlebars, plus PHP-esque requiring.
+Hapi *( >= 8)* and Express *( >= 4 )* HTML templating for files with .html extension. Similiar to Handlebars in its features, Lego allows for doing server-side includes of static HTML files or other JS files that return primitives, and the use of logical operators for conditionals. Think Handlebars, meets KnockoutJS, plus PHP-esque requiring.
 
 [Server Implentation](#setup)
 
