@@ -60,17 +60,21 @@ app.get('/users', function(req, res){
 Both the Hapi `view` and the Express `render` methods take a second, optional, object after the template name. This object is the content object used for any calls to Lego's `insert`/`if`/`foreach` methods.
 
 ___
+
+<p>&nbsp;</p>
+
 <a name="methods"></a>
 ## View Templating Methods
+
+<p>&nbsp;</p>
 
 <a name="define"></a>
 ### - Define
 
 Define custom snippets of HTML inside templates to include with insert command.
 
-**Examples:**
 
-<p>&nbsp;</p>
+**Examples:**
 
 This defines a context-less block of code to be inserted anywhere
 
@@ -102,11 +106,19 @@ This defines a block of code with a context, who's context will only be resolved
 <!-- lego::enddefine -->
 ```
 
-When inserted inside a foreach call on an context that looks like `{arr: [1, 2, 3]}`...
+When inserted inside a foreach call on an context that looks like:
+
+```javascript
+{
+  'arr': [1, 2, 3]
+}
+```
+
+And invoked as such...
 
 ```html
 <!-- lego::foreach arr -->
-    <!-- lego::insert customTemplate -->
+  <!-- lego::insert customTemplate -->
 <!-- lego::endforeach -->
 ```
 
@@ -122,6 +134,8 @@ Renders this...
 
 Be aware that using the `define` method essentially extends the context object fed to the `view`/`render` method with a new key matching the string provided. So it's possible to override any values in that object that have the same name.
 
+<p>&nbsp;</p>
+
 <a name="foreach"></a>
 ### - Foreach
 
@@ -129,4 +143,39 @@ Iterate through arrays or objects, with the content of each of the loops being t
 
 **Examples:**
 
+Let's pretend we defined a context such as:
+
+```javascript
+{
+  'users':{
+    'admins': [
+      {
+        'name': 'Mike'
+      },
+      {
+        'name': 'Bob'
+      }
+    ]
+  },
+  'class': 'userClass'
+}
+```
+
+And invoke it as such...
+
+```html
+<!-- lego::foreach users.admins -->
+  <div class="<!-- lego::insert $root.class -->"><!-- lego::insert name --></div>
+<!-- lego::endforeach -->
+```
+
+Renders this...
+
+```html
+<div class="userClass">Mike</div>
+<div class="userClass">Bob</div>
+```
+
 <p>&nbsp;</p>
+
+Notice that the context of each div is the individual object being iterated through in the array, but that you can reference that entire context object inside that loop by using `$root`.
