@@ -1,7 +1,6 @@
 {
   "name": "lego",
-  "version": "0.0.1-BUILD-NUMBER",
-  "private": true,
+  "version": "0.5.0",
   "main": "lego.js",
   "dependencies": {
     "async": "=0.9.0",    
