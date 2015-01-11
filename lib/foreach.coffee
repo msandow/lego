@@ -2,6 +2,7 @@ pairs = require(__dirname + '/pairs.coffee')
 cheerio = require('cheerio')
 insert = require(__dirname + '/insert.coffee')
 _if = require(__dirname + '/if.coffee')
+_ctx = require(__dirname + '/context.coffee')
 
 _fe = 
   openRegexp: new RegExp('lego::foreach\\s+(.*?)', 'i')
@@ -38,8 +39,8 @@ _fe.resolvedParser = (fullSet, ctx) ->
           _fe.recurse(cloned,resolved[i])          
         
 
-        insert.recurse(cloned, resolved[i], ctx)
-        _if.recurse(cloned, resolved[i], ctx)
+        insert.recurse(cloned, resolved[i])
+        _if.recurse(cloned, resolved[i])
         newNode.append(cloned.html())
       i++
 
@@ -77,8 +78,6 @@ _fe.resolve = (el, ctx) ->
   data = el.data.trim()
   _var = data.replace(_fe.openRegexp, '$1')
   
-  #console.log(_var, ctx[_var])
-  
   if /\w\.\w/i.test(_var)
     _var = _var.split('.')
     for sub in _var
@@ -86,7 +85,7 @@ _fe.resolve = (el, ctx) ->
         ctx = ctx[sub]
       else
         return false
-    
+
     return ctx
   else
     if ctx[_var] and Array.isArray(ctx[_var]) and ctx[_var].length > 0
@@ -95,7 +94,8 @@ _fe.resolve = (el, ctx) ->
       newArr = []
       
       for own k,v of ctx[_var]
-        newArr.push({'$key':k, '$value':v})
+        if _ctx.excludedKeys.indexOf(k) is -1
+          newArr.push({'$key':k, '$value':v})
       
       return newArr
     else

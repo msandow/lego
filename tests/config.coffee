@@ -31,7 +31,7 @@ module.exports =
               method: 'GET'
               path: '/'+idx
               handler: (request, reply) ->
-                reply.view(t.file, t.ctx)
+                reply.view(t.file, JSON.parse(JSON.stringify(t.ctx)))
               config:
                 state:
                   parse: false
@@ -68,7 +68,7 @@ module.exports =
         for t,idx in suite.tests
           do (t, idx) ->
             app.get('/'+idx, (req, res)->
-              res.render(t.file, t.ctx)
+              res.render(t.file, JSON.parse(JSON.stringify(t.ctx)))
             )
 
         server = app.listen(@port)

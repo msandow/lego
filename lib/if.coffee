@@ -16,8 +16,7 @@ _if.findCloseComments = ($) ->
     el.type is 'comment' and _if.closeRegexp.test(el.data.trim())
   )
 
-_if.recurse = ($, ctx , rootctx=false) ->
-  rootctx = ctx if not rootctx
+_if.recurse = ($, ctx) ->
 
   ifs = _if.findOpenComments($)
   eifs = _if.findCloseComments($)
@@ -32,7 +31,7 @@ _if.recurse = ($, ctx , rootctx=false) ->
         _if.openRegexp,
         _if.closeRegexp,
         (fullSet)->
-          if not _if.resolve(fullSet.get(0), ctx, rootctx)
+          if not _if.resolve(fullSet.get(0), ctx)
             fullSet.remove()
           else
             fullSet.eq(0).remove()
@@ -46,7 +45,7 @@ _if.recurse = ($, ctx , rootctx=false) ->
   
   $
 
-_if.resolve = (el, ctx, rootctx) ->
+_if.resolve = (el, ctx) ->
   _case = el.data.trim().replace(_if.openRegexp, '$1')
   _var = el.data.trim().replace(_if.openRegexp, '$2')
   
@@ -68,16 +67,9 @@ _if.resolve = (el, ctx, rootctx) ->
   parse = (_var) ->
     if /\w\.\w/i.test(_var)
       arr = _var.split('.')
-      if arr[0] is '$root'      
-        state = traverse(arr.slice(1), rootctx)
-      else if arr[0] is '$this'
-        state = ctx  
-      else
-        state = traverse(arr, ctx)
+      state = traverse(arr, ctx)
     else
-      if _var is '$this'
-        state = ctx
-      else if ctx[_var]
+      if ctx[_var]
         state = ctx[_var]
       else
         state = false
@@ -87,7 +79,7 @@ _if.resolve = (el, ctx, rootctx) ->
   if el.data.trim().replace(_if.openRegexp, '$3') and el.data.trim().replace(_if.openRegexp, '$4')
     op = el.data.trim().replace(_if.openRegexp, '$3')
     comp = el.data.trim().replace(_if.openRegexp, '$4')
-    
+
     if _if.isString.test(comp)
       state = _eval(parse(_var), op, comp)
     else

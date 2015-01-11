@@ -2,6 +2,7 @@ cheerio = require('cheerio')
 path = require('path')
 fs = require('fs')
 req = require(__dirname + '/require.coffee')
+_ctx = require(__dirname + '/context.coffee')
 
 attachedDir = __dirname
 
@@ -30,7 +31,7 @@ module.exports =
         fs.readFile(filePath, (err, contents)->
           req.recurse(
             cheerio.load(contents.toString()),
-            ctx,
+            _ctx.build(ctx),
             if ctx.templatesRoot then path.resolve(attachedDir, ctx.templatesRoot) else path.dirname(filePath),
             (renderedTemplate)->
               #req.fetchedTemplates = {}
@@ -44,9 +45,10 @@ module.exports =
   
   compile: (template, options, callback) ->
     callback(null, (ctx, opts, cb) ->
+
       req.recurse(
         cheerio.load(template),
-        ctx,
+        _ctx.build(ctx),
         if ctx.templatesRoot then path.resolve(attachedDir, ctx.templatesRoot) else path.dirname(options.filename),
         (renderedTemplate)->
           #req.fetchedTemplates = {}

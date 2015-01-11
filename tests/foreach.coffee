@@ -190,6 +190,28 @@ suite =
         </body>
       </html>
       """
+  ,
+    name: 'Should traverse object iterations'
+    file: 'main_foreach_traverse'
+    ctx:
+      obj:
+        'arr':['a', 'b', 'c']
+        'obj':
+          'baz':true
+    expected: """
+      <!DOCTYPE html>
+      <html lang="en">
+        <head>
+          <meta charset="utf-8">
+          <title>Lego Test</title>
+        </head>
+        <body>
+          <div>a</div>
+          <div>b</div>
+          <div>c</div>
+        </body>
+      </html>
+      """
   ]
 
 config.buildSuite(suite)

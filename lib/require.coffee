@@ -31,8 +31,6 @@ req.recurse = ($, ctx, root, finished) ->
           fs.exists(absPath, (exists)->
             if not exists
               console.warn('Template',absPath,'not found')
-              console.log(req.fetchedTemplates[absPath])
-              process.exit(1)
               cb(null, req.fetchedTemplates[absPath])
             else
               ext = path.extname(absPath)

@@ -14,13 +14,12 @@ insert.findComments = ($) ->
       hasAttr
   )
 
-insert.recurse = ($, ctx, rootctx=false) ->
-  rootctx = ctx if not rootctx
+insert.recurse = ($, ctx) ->
   
   inserts = insert.findComments($)
   
   inserts.each((i, el) ->
-    $(el).replaceWith(insert.resolve(el, ctx, rootctx))
+    $(el).replaceWith(insert.resolve(el, ctx))
   )
   
   if insert.findComments($).length
@@ -28,28 +27,23 @@ insert.recurse = ($, ctx, rootctx=false) ->
   
   $
 
-insert.resolve = (el, ctx, rootctx) ->
+insert.resolve = (el, ctx) ->
   fetchVar = (_var) ->
  
     if /\w\.\w/i.test(_var)
       arr = _var.split('.')
     
-      if arr[0] is '$root'
-        ctx = rootctx
-        return fetchVar(arr.slice(1).join('.'))
-      else if ctx[arr[0]] and typeof ctx[arr[0]] is 'object'
+      if ctx[arr[0]] and typeof ctx[arr[0]] is 'object'
         ctx = ctx[arr[0]]
         return fetchVar(arr.slice(1).join('.'))
       else
         return ''
-    else if _var is '$this'
-      if Array.isArray(ctx) or typeof ctx is 'object'
-        return JSON.stringify(ctx)
-      else
-        return String(ctx)
     else if ctx[_var]
       if Array.isArray(ctx[_var]) or typeof ctx[_var] is 'object'
-        return JSON.stringify(ctx[_var])
+        if ctx[_var].$this and typeof ctx[_var].$this is 'object'
+          return JSON.stringify(ctx[_var].$this)
+        else if Array.isArray(ctx[_var]) and ctx.$this[_var]
+          JSON.stringify(ctx.$this[_var])
       else
         return String(ctx[_var])
     else
