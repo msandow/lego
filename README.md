@@ -6,6 +6,9 @@ Hapi *( >= 8)* and Express *( >= 4 )* HTML templating for files with .html exten
 
 [View Templating Methods](#methods)
 
+- [Define](#define)
+- [Foreach](#foreach)
+
 ___
 <a name="setup"></a>
 ## Server Implementation
@@ -60,7 +63,7 @@ ___
 <a name="methods"></a>
 ## View Templating Methods
 
-
+<a name="define"></a>
 ### - Define
 
 Define custom snippets of HTML inside templates to include with insert command.
@@ -119,7 +122,7 @@ Renders this...
 
 Be aware that using the `define` method essentially extends the context object fed to the `view`/`render` method with a new key matching the string provided. So it's possible to override any values in that object that have the same name.
 
-
+<a name="foreach"></a>
 ### - Foreach
 
 Iterate through arrays or objects, with the content of each of the loops being the single array element, or the single key/value pair in an object.

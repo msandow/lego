@@ -212,6 +212,33 @@ suite =
         </body>
       </html>
       """
+  ,
+    name: 'Should traverse object in readme'
+    file: 'main_foreach_readme'
+    ctx:
+      users:
+        admins:[
+          {
+            'name': 'Mike'
+          },
+          {
+            'name': 'Bob'
+          }
+        ]
+      'class': 'userClass'
+    expected: """
+      <!DOCTYPE html>
+      <html lang="en">
+        <head>
+          <meta charset="utf-8">
+          <title>Lego Test</title>
+        </head>
+        <body>
+          <div class="userClass">Mike</div>
+          <div class="userClass">Bob</div>
+        </body>
+      </html>
+      """
   ]
 
 config.buildSuite(suite)
