@@ -29,7 +29,7 @@ insert.recurse = ($, ctx) ->
 
 insert.resolve = (el, ctx) ->
   fetchVar = (_var) ->
- 
+    
     if /\w\.\w/i.test(_var)
       arr = _var.split('.')
     
@@ -43,7 +43,9 @@ insert.resolve = (el, ctx) ->
         if ctx[_var].$this and typeof ctx[_var].$this is 'object'
           return JSON.stringify(ctx[_var].$this)
         else if Array.isArray(ctx[_var]) and ctx.$this[_var]
-          JSON.stringify(ctx.$this[_var])
+          return JSON.stringify(ctx.$this[_var])
+        else if typeof ctx[_var] is 'object'
+          return JSON.stringify(ctx[_var])
       else
         return String(ctx[_var])
     else

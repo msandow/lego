@@ -242,6 +242,30 @@ suite =
         </body>
       </html>
       """
+  ,
+    name: 'Should serialize'
+    file: 'main_foreach_serialize'
+    ctx:
+      list: [
+        [1,2],
+        {
+          foo:
+            stuff:'bar'
+        }
+      ]
+    expected: """
+      <!DOCTYPE html>
+      <html lang="en">
+        <head>
+          <meta charset="utf-8">
+          <title>Lego Test</title>
+        </head>
+        <body>
+          [1,2]<br>
+          {&quot;foo&quot;:{&quot;stuff&quot;:&quot;bar&quot;}}<br>
+        </body>
+      </html>
+      """
   ]
 
 config.buildSuite(suite)

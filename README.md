@@ -109,9 +109,9 @@ This defines a block of code with a context, who's context will only be resolved
 When inserted inside a foreach call on an context that looks like:
 
 ```javascript
-{
+context = {
   'arr': [1, 2, 3]
-}
+};
 ```
 
 And invoked as such...
@@ -143,10 +143,10 @@ Iterate through arrays or objects, with the content of each of the loops being t
 
 **Examples:**
 
-Let's pretend we defined a context such as:
+Let's pretend we passed a context such as:
 
 ```javascript
-{
+context = {
   'users':{
     'admins': [
       {
@@ -158,7 +158,7 @@ Let's pretend we defined a context such as:
     ]
   },
   'class': 'userClass'
-}
+};
 ```
 
 And invoke it as such...
@@ -179,3 +179,29 @@ Renders this...
 <p>&nbsp;</p>
 
 Notice that the context of each div is the individual object being iterated through in the array, but that you can reference that entire context object inside that loop by using `$root`.
+
+You can also iterate through object keys and values using special `$key` and `$value` keywords:
+
+```javascript
+var context = {
+  'object':{
+    'foo': 'bar',
+    'value': 8
+  }
+};
+```
+
+As such...
+
+```html
+<!-- lego::foreach object -->
+  <div><!-- lego::insert $key -->: <!-- lego::insert $value --></div>
+<!-- lego::endforeach -->
+```
+
+Yields...
+
+```html
+<div>foo: bar</div>
+<div>value: 8</div>
+```

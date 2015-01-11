@@ -20,7 +20,7 @@ _fe.findCloseComments = ($) ->
 
 _fe.resolvedParser = (fullSet, ctx) ->
   resolved = _fe.resolve(fullSet.get(0), ctx)
-  
+
   if not resolved
     fullSet.remove()
   else
@@ -29,19 +29,16 @@ _fe.resolvedParser = (fullSet, ctx) ->
     i = 0
 
     while i < resolved.length
-      if Array.isArray(resolved[i])
-        _fe.resolvedParser(resolved[i], stamp, newNode)
-      else
-        cloned = cheerio.load('<body></body>')
-        cloned('*').first().append(stamp.clone())
+      cloned = cheerio.load('<body></body>')
+      cloned('*').first().append(stamp.clone())
 
-        if _fe.findOpenComments(cloned)
-          _fe.recurse(cloned,resolved[i])          
+      if _fe.findOpenComments(cloned)
+        _fe.recurse(cloned,resolved[i])          
 
-        insert.recurse(cloned, resolved[i])
-        _if.recurse(cloned, resolved[i])
+      insert.recurse(cloned, resolved[i])
+      _if.recurse(cloned, resolved[i])
 
-        newNode.append(cloned('body').html())
+      newNode.append(cloned('body').html())
       i++
 
     fullSet.replaceWith(newNode.contents())
