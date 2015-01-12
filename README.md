@@ -10,7 +10,7 @@ Hapi *( >= 8)* and Express *( >= 4 )* HTML templating for files with .html exten
 
 - [Define](#define)
 - [Foreach](#foreach)
-- [If](#if)
+- [If / Notif](#if)
 
 <p>&nbsp;</p>
 
@@ -108,7 +108,7 @@ Renders this...
 
 <p>&nbsp;</p>
 
-This defines a block of code with a context, who's context will only be resolved when actually inserted
+This defines a sub-template of code with a context, who's context will only be resolved when actually inserted
 
 ```html
 <!-- lego::define customTemplate -->
@@ -143,6 +143,8 @@ Renders this...
 <p>&nbsp;</p>
 
 Be aware that using the `define` method essentially extends the context object fed to the `view`/`render` method with a new key matching the string provided. So it's possible to override any values in that object that have the same name.
+
+Defined sub-templates are removed after definition, and never rendered unless inserted.
 
 <p>&nbsp;</p>
 
@@ -257,3 +259,38 @@ Arrays | length > 1 | length = 0
 Objects | exists | `undefined`
 Strings | length > 1 | length = 0
 Numbers | < > 0 | = 0 
+
+`notif` simply reverses the truthy state of any evaluation, useful for hiding pieces of HTML that have empty content.
+
+<p>&nbsp;</p>
+
+For more specific evaluations, you can use normal javascript comparisons as well:
+
+```javascript
+var context = {
+  'word': 'hello',
+  'verbs': ['a', 'b', 'c'],
+  'length': 3
+};
+```
+
+```html
+<!-- lego::if verbs.length is length -->
+  <span>Matches</span>
+<!-- lego::endif -->
+
+<!-- lego::if word !== 'world' -->
+  <span>Does not match</span>
+<!-- lego::endif -->
+```
+
+Yielding...
+
+```html
+<span>Matches</span>
+<span>Does not match</span>
+```
+
+Take special note that you can use coffeescript `is` and `isnt` terms in place of `===` and `!==`.
+
+Currently, more complex multiple comparisons joined with `&&` or `||` aren't supported in a single lego tag. You can, however, nest multiple `if` / `notif` tags to achieve similar results, although such complex abstractions are better left to derived attributes in the context object itself.
