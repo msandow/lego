@@ -1,5 +1,7 @@
 # Lego
 
+***Blocks. They're all blocks.***
+
 Hapi *( >= 8)* and Express *( >= 4 )* HTML templating for files with .html extension. Similiar to Handlebars in its features, Lego allows for doing server-side includes of static HTML files or other JS files that return primitives, and the use of logical operators for conditionals. Think Handlebars, meets KnockoutJS, plus PHP-esque requiring.
 
 [Server Implentation](#setup)
@@ -9,7 +11,12 @@ Hapi *( >= 8)* and Express *( >= 4 )* HTML templating for files with .html exten
 - [Define](#define)
 - [Foreach](#foreach)
 
+<p>&nbsp;</p>
+
 ___
+
+<p>&nbsp;</p>
+
 <a name="setup"></a>
 ## Server Implementation
 
@@ -58,6 +65,8 @@ app.get('/users', function(req, res){
 ```
 
 Both the Hapi `view` and the Express `render` methods take a second, optional, object after the template name. This object is the content object used for any calls to Lego's `insert`/`if`/`foreach` methods.
+
+<p>&nbsp;</p>
 
 ___
 

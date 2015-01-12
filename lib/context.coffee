@@ -12,8 +12,8 @@ module.exports =
 
     walk = (ob, par, root) =>
       if Array.isArray(ob)
-        ob.$this = JSON.stringify(ob)
-        
+        ob.$this = @clone(ob)
+
         for it, idx in ob
           nob = {}
           nob.$this = if typeof it is 'object' then @clone(it) else it

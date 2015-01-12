@@ -87,6 +87,9 @@ describe('Context', ->
     expect(to.users[2].$this).to.equal(3)
     expect(to.users[0].$parent).to.equal(parent)
     expect(to.users[0].$root).to.equal(root)
+    expect(to.users.$this[0]).to.equal(1)
+    expect(to.users.$this[1]).to.equal(2)
+    expect(to.users.$this[2]).to.equal(3)
     
     done()
   )
