@@ -10,6 +10,7 @@ Hapi *( >= 8)* and Express *( >= 4 )* HTML templating for files with .html exten
 
 - [Define](#define)
 - [Foreach](#foreach)
+- [If](#if)
 
 <p>&nbsp;</p>
 
@@ -214,3 +215,45 @@ Yields...
 <div>foo: bar</div>
 <div>value: 8</div>
 ```
+
+<p>&nbsp;</p>
+
+<a name="if"></a>
+### - If / Ifnot
+
+The means of inserting logic into your templates, which comes in two flavors: a simple truthy comparison, or a direct comparison between two points of data.
+
+Let's try a context / invocation as below:
+
+```javascript
+var context = {
+  'word': 'hello',
+  'verbs': []
+};
+```
+
+```html
+<!-- lego::if word -->
+  <span><!-- lego::insert word --></span>
+<!-- lego::endif -->
+
+<!-- lego::if verbs -->
+  <span><!-- lego::insert verbs --></span>
+<!-- lego::endif -->
+```
+
+Yielding...
+
+```html
+<span>hello</span>
+```
+
+For truthy evaluations when using the simple `if` / `notif` conditionals, refer to the table below:
+
+&nbsp; | Truthy | Not Truthy
+:--- | :---: | :---:
+Booleans | `true` | `false`
+Arrays | length > 1 | length = 0
+Objects | exists | `undefined`
+Strings | length > 1 | length = 0
+Numbers | < > 0 | = 0 

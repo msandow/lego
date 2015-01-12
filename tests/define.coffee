@@ -23,6 +23,23 @@ suite =
         </body>
       </html>
       """
+  ,
+    name: 'Should chain defined values'
+    file: 'main_define_2'
+    ctx:
+      thing: 'hello'
+    expected: """
+      <!DOCTYPE html>
+      <html lang="en">
+        <head>
+          <meta charset="utf-8">
+          <title>Lego Test</title>
+        </head>
+        <body>
+          <p><span>hello</span></p>
+        </body>
+      </html>
+      """
   ]
 
 config.buildSuite(suite)
