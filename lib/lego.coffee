@@ -23,25 +23,29 @@ module.exports =
     else if server.engines and server.mountpath
       # Express
       
-      server.engine('html', (filePath, options, callback) ->
+      server.engine('html', (filePath, options, callback) =>
         ctx = {}
         for own k,v of options
           ctx[k] = v if ['settings','_locals','cache'].indexOf(k) is -1
       
-        fs.readFile(filePath, (err, contents)->
-          req.recurse(
-            cheerio.load(contents.toString()),
-            _ctx.build(ctx),
-            if ctx.templatesRoot then path.resolve(attachedDir, ctx.templatesRoot) else path.dirname(filePath),
-            (renderedTemplate)->
-              #req.fetchedTemplates = {}
-              callback(null, renderedTemplate)
-          )
+        @render(filePath, ctx, (renderedTemplate)->
+          callback(null, renderedTemplate)
         )
       )
       
       server.set('views', templates)
       server.set('view engine', 'html')
+  
+  render: (filePath, ctx, callback) ->
+    fs.readFile(filePath, (err, contents)->
+      req.recurse(
+        cheerio.load(contents.toString()),
+        _ctx.build(ctx),
+        if ctx.templatesRoot then path.resolve(attachedDir, ctx.templatesRoot) else path.dirname(filePath),
+        (renderedTemplate)->
+          callback(renderedTemplate)
+      )
+    )
   
   compile: (template, options, callback) ->
     callback(null, (ctx, opts, cb) ->
@@ -51,7 +55,6 @@ module.exports =
         _ctx.build(ctx),
         if ctx.templatesRoot then path.resolve(attachedDir, ctx.templatesRoot) else path.dirname(options.filename),
         (renderedTemplate)->
-          #req.fetchedTemplates = {}
           cb(null, renderedTemplate)
       )
     )

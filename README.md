@@ -67,6 +67,23 @@ app.get('/users', function(req, res){
 
 Both the Hapi `view` and the Express `render` methods take a second, optional, object after the template name. This object is the content object used for any calls to Lego's `insert`/`if`/`foreach` methods.
 
+Not using Hapi or Express? You can wire up Lego directly with the `render` method with this signature:
+ 
+| | |
+|--|--|
+| `filePath` | The path on disk for the template to load: `/Users/bob/lego/templates/index.html` |
+| `ctx` | The contenxt object containing any optional key / value pairs to insert into your page |
+| `callback` | The function to call when rendering is complete, which takes a single parameter that's the compiled HTML |
+
+```javascript
+var lego = require('lego');
+//Inside your particular request handler function
+
+lego.render('my/file/path.html', {}, function(renderedTemplate){
+    respond.with(renderedTemplate);
+});
+```
+
 <p>&nbsp;</p>
 
 ___
