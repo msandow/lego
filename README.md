@@ -69,7 +69,7 @@ Both the Hapi `view` and the Express `render` methods take a second, optional, o
 
 Not using Hapi or Express? You can wire up Lego directly with the `render` method with this signature:
  
-| | |
+| &nbsp; | &nbsp; |
 |--|--|
 | `filePath` | The path on disk for the template to load: `/Users/bob/lego/templates/index.html` |
 | `ctx` | The contenxt object containing any optional key / value pairs to insert into your page |
