@@ -110,6 +110,29 @@ suite =
         </body>
       </html>
       """
+  ,
+    name: 'Should insert vars - array'
+    file: 'main_insert_array'
+    ctx:
+      foo: [
+        [
+          2,
+          2
+        ]
+      ]
+    expected: """
+      <!DOCTYPE html>
+      <html lang="en">
+        <head>
+          <meta charset="utf-8">
+          <title>Lego Test</title>
+        </head>
+        <body>
+          <p id="2"></p>
+          <p>Hello</p>
+        </body>
+      </html>
+      """
   ]
 
 config.buildSuite(suite)

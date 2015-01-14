@@ -21,7 +21,7 @@ insert.recurse = ($, ctx) ->
   inserts = insert.findComments($)
   
   inserts.each((i, el) ->
-    $(el).replaceWith(insert.resolve(el, ctx))
+    $(el).replaceWith(insert.resolve($, el, ctx))
   )
   
   if insert.findComments($).length
@@ -29,7 +29,7 @@ insert.recurse = ($, ctx) ->
   
   $
 
-insert.resolve = (el, ctx) ->
+insert.resolve = (root, el, ctx) ->
   fetchVar = (_var) ->
     e = _eval(_var, ctx)
 
@@ -38,10 +38,12 @@ insert.resolve = (el, ctx) ->
         e = JSON.stringify(e)
       else
         e = JSON.stringify(e.$this)
-    if typeof e is 'number'
+    else if typeof e is 'number'
       e = String(e)
-    if typeof e is 'function'
+    else if typeof e is 'function'
       e = e()
+    else if typeof e is 'boolean'
+      e = ''
       
     return e
 
@@ -49,11 +51,15 @@ insert.resolve = (el, ctx) ->
     _var = el.data.trim().replace(insert.regexp, '$1')
     return fetchVar(_var)
   else
-    for own k,v of el.attribs
+    rep = root(el).clone()
+    attrs = rep.get(0).attribs
+
+    for own k,v of attrs
       if insert.regexp.test(v)
         _var = v.trim().replace(insert.subTreeRegexp, '$2')
-        el.attribs[k] = fetchVar(_var)
-    return el
+        rep.attr(k, fetchVar(_var))
+
+    return rep
 
 
 module.exports = insert

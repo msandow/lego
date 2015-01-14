@@ -62,8 +62,12 @@ _if.resolve = (el, ctx) ->
     
     op = '===' if op is 'is'
     op = '!==' if op is 'isnt'
-    statement = _var.replace(/(\[\d+\])/gi, '$1.$this') + ' ' + op + ' ' + comp
     
+    
+    if not _if.isString.test(comp)
+      comp = comp.replace(/(\w)(\[\d+\])/gi, '$1.$this$2')
+    
+    statement = _var.replace(/(\w)(\[\d+\])/gi, '$1.$this$2') + ' ' + op + ' ' + comp
     state = getState(_eval(statement, ctx))
   else    
     state = getState(_eval(_var, ctx))
