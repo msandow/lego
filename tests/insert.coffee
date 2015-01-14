@@ -120,6 +120,13 @@ suite =
           2
         ]
       ]
+      bar: [
+        {
+          foo: [
+            'string'
+          ]
+        }
+      ]
     expected: """
       <!DOCTYPE html>
       <html lang="en">
@@ -130,6 +137,7 @@ suite =
         <body>
           <p id="2"></p>
           <p>Hello</p>
+          <span>string</span>
         </body>
       </html>
       """

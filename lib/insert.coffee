@@ -34,16 +34,17 @@ insert.resolve = (root, el, ctx) ->
     e = _eval(_var, ctx)
 
     if typeof e is 'object'
-      if e.$this is undefined
-        e = JSON.stringify(e)
-      else
-        e = JSON.stringify(e.$this)
+      if e.$this isnt undefined
+        e = e.$this
     else if typeof e is 'number'
       e = String(e)
     else if typeof e is 'function'
       e = e()
     else if typeof e is 'boolean'
       e = ''
+      
+     if typeof e is 'object'
+        e = JSON.stringify(e)
       
     return e
 

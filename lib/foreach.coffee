@@ -3,6 +3,7 @@ cheerio = require('cheerio')
 insert = require(__dirname + '/insert.coffee')
 _if = require(__dirname + '/if.coffee')
 _ctx = require(__dirname + '/context.coffee')
+_eval = require(__dirname + '/eval.coffee')
 
 _fe = 
   openRegexp: new RegExp('lego::foreach\\s+(.*?)', 'i')
@@ -75,27 +76,17 @@ _fe.resolve = (el, ctx) ->
   data = el.data.trim()
   _var = data.replace(_fe.openRegexp, '$1')
   
-  if /\w\.\w/i.test(_var)
-    _var = _var.split('.')
-    for sub in _var
-      if ctx[sub] isnt undefined
-        ctx = ctx[sub]
-      else
-        return false
-
-    return ctx
-  else
-    if ctx[_var] isnt undefined and Array.isArray(ctx[_var]) and ctx[_var].length > 0
-      return ctx[_var]
-    else if typeof ctx[_var] is 'object'
-      newArr = []
+  e = _eval(_var, ctx)
+  
+  if typeof e is 'object' and not Array.isArray(e)
+    newArr = []
       
-      for own k,v of ctx[_var]
-        if _ctx.excludedKeys.indexOf(k) is -1
-          newArr.push({'$key':k, '$value':v})
-      
-      return newArr
-    else
-      return false
+    for own k,v of e
+      if _ctx.excludedKeys.indexOf(k) is -1
+        newArr.push({'$key':k, '$value':v})
+    
+    return newArr
+  
+  return e
 
 module.exports = _fe

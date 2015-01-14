@@ -10,5 +10,9 @@
     <!-- lego::if foo[0][1] is foo[0][0] -->
       <p>Hello</p>
     <!-- lego::endif -->
+    
+    <!-- lego::if bar[0].foo[0] -->
+      <span><!-- lego::insert bar[0].foo[0] --></span>
+    <!-- lego::endif -->
   </body>
 </html>
