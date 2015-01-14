@@ -2,8 +2,23 @@ module.exports =
 
   excludedKeys: ['templatesRoot', '$this', '$parent', '$root']
 
-  clone: (ob) ->
-    JSON.parse(JSON.stringify(ob))
+  clone: (o) ->
+    if Array.isArray(o)
+      oo = []
+      for i in o
+        if typeof i is 'object'
+          oo.push(@clone(i))
+        else
+          oo.push(i)
+    else
+      oo = {}
+      for own k, v of o
+        if typeof v is 'object'
+          oo[k] = @clone(v)
+        else
+          oo[k] = v
+
+    oo
 
   build: (oo) ->
     oo.$this = @clone(oo)
