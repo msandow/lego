@@ -4,7 +4,7 @@ _eval = require(__dirname + '/eval.coffee')
 _if = 
   openRegexp: new RegExp('lego::(if|notif)\\s+([\\S]*)\\s*([\\S]*)\\s*([\\S]*)', 'i')
   closeRegexp: new RegExp('lego::endif\\s*', 'i')
-  isString: new RegExp('("|&quot;|\'|&apos;)([\\w]+)("|&quot;|\'|&apos;)', 'i')
+  isString: new RegExp('("|&quot;|\'|&apos;)([\\w]*)("|&quot;|\'|&apos;)', 'i')
 
 _if.findOpenComments = ($) ->
   $('*').contents().filter((i, el) ->
@@ -45,6 +45,7 @@ _if.recurse = ($, ctx) ->
   
   $
 
+
 _if.resolve = (el, ctx) ->
   _case = el.data.trim().replace(_if.openRegexp, '$1')
   _var = el.data.trim().replace(_if.openRegexp, '$2')
@@ -55,38 +56,17 @@ _if.resolve = (el, ctx) ->
     else
       return !!v
   
-  traverse = (arr, ctx) ->
-    for o in arr
-      if ctx[o]
-        ctx = ctx[o]
-      else
-        ctx = false
-        break
-    ctx
-  
-  parse = (_var) ->
-    if /\w\.\w/i.test(_var)
-      arr = _var.split('.')
-      state = traverse(arr, ctx)
-    else
-      if ctx[_var]
-        state = ctx[_var]
-      else
-        state = false
-    
-    state
-  
   if el.data.trim().replace(_if.openRegexp, '$3') and el.data.trim().replace(_if.openRegexp, '$4')
     op = el.data.trim().replace(_if.openRegexp, '$3')
     comp = el.data.trim().replace(_if.openRegexp, '$4')
-
-    if _if.isString.test(comp)
-      state = _eval(parse(_var), op, comp)
-    else
-      comp = if not /[\D]/i.test(comp) then parseInt(comp) else parse(comp)
-      state = _eval(parse(_var), op, comp)
-  else  
-    state = getState(parse(_var))
+    
+    op = '===' if op is 'is'
+    op = '!==' if op is 'isnt'
+    statement = _var.replace(/(\[\d+\])/gi, '$1.$this') + ' ' + op + ' ' + comp
+    
+    state = getState(_eval(statement, ctx))
+  else    
+    state = getState(_eval(_var, ctx))
 
   if _case is 'notif' then !state else state
 

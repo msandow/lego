@@ -49,7 +49,6 @@ module.exports =
   
   compile: (template, options, callback) ->
     callback(null, (ctx, opts, cb) ->
-
       req.recurse(
         cheerio.load(template),
         _ctx.build(ctx),

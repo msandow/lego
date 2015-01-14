@@ -5,6 +5,23 @@ express = require('express')
 request = require('request')
 lego = require(__dirname + '/../lego.js')
 
+cloner = (o) ->
+  if Array.isArray(o)
+    oo = []
+    for i in o
+      if typeof i is 'object'
+        oo.push(cloner(i))
+      else
+        oo.push(i)
+  else
+    oo = {}
+    for own k, v of o
+      if typeof v is 'object'
+        oo[k] = cloner(v)
+      else
+        oo[k] = v
+  
+  oo
 
 module.exports =
   port: 3333
@@ -31,7 +48,7 @@ module.exports =
               method: 'GET'
               path: '/'+idx
               handler: (request, reply) ->
-                reply.view(t.file, JSON.parse(JSON.stringify(t.ctx)))
+                reply.view(t.file, cloner(t.ctx))
               config:
                 state:
                   parse: false
@@ -68,7 +85,7 @@ module.exports =
         for t,idx in suite.tests
           do (t, idx) ->
             app.get('/'+idx, (req, res)->
-              res.render(t.file, JSON.parse(JSON.stringify(t.ctx)))
+              res.render(t.file, cloner(t.ctx))
             )
 
         server = app.listen(@port)

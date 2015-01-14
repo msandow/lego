@@ -91,6 +91,25 @@ suite =
         </body>
       </html>
       """
+  ,
+    name: 'Should insert vars - function'
+    file: 'main_insert_function'
+    ctx:
+      doIt: () ->
+        '<img src="foo.jpg">'
+      stuff: 1
+    expected: """
+      <!DOCTYPE html>
+      <html lang="en">
+        <head>
+          <meta charset="utf-8">
+          <title>Lego Test</title>
+        </head>
+        <body>
+          <img src="foo.jpg">
+        </body>
+      </html>
+      """
   ]
 
 config.buildSuite(suite)

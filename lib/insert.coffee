@@ -1,3 +1,5 @@
+_eval = require(__dirname + '/eval.coffee')
+
 insert = 
   regexp: new RegExp('lego::insert\\s+(.*?)', 'i')
   subTreeRegexp: new RegExp('(<|&lt;)!-- lego::insert\\s+(.*?) --(>|&gt;)', 'gim')
@@ -29,27 +31,19 @@ insert.recurse = ($, ctx) ->
 
 insert.resolve = (el, ctx) ->
   fetchVar = (_var) ->
-    
-    if /\w\.\w/i.test(_var)
-      arr = _var.split('.')
-    
-      if ctx[arr[0]] and typeof ctx[arr[0]] is 'object'
-        ctx = ctx[arr[0]]
-        return fetchVar(arr.slice(1).join('.'))
+    e = _eval(_var, ctx)
+
+    if typeof e is 'object'
+      if e.$this is undefined
+        e = JSON.stringify(e)
       else
-        return ''
-    else if ctx[_var]
-      if Array.isArray(ctx[_var]) or typeof ctx[_var] is 'object'
-        if ctx[_var].$this and typeof ctx[_var].$this is 'object'
-          return JSON.stringify(ctx[_var].$this)
-        else if Array.isArray(ctx[_var]) and ctx.$this[_var]
-          return JSON.stringify(ctx.$this[_var])
-        else if typeof ctx[_var] is 'object'
-          return JSON.stringify(ctx[_var])
-      else
-        return String(ctx[_var])
-    else
-      return ''
+        e = JSON.stringify(e.$this)
+    if typeof e is 'number'
+      e = String(e)
+    if typeof e is 'function'
+      e = e()
+      
+    return e
 
   if el.type is 'comment'
     _var = el.data.trim().replace(insert.regexp, '$1')

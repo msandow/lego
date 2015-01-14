@@ -78,14 +78,14 @@ _fe.resolve = (el, ctx) ->
   if /\w\.\w/i.test(_var)
     _var = _var.split('.')
     for sub in _var
-      if ctx[sub]
+      if ctx[sub] isnt undefined
         ctx = ctx[sub]
       else
         return false
 
     return ctx
   else
-    if ctx[_var] and Array.isArray(ctx[_var]) and ctx[_var].length > 0
+    if ctx[_var] isnt undefined and Array.isArray(ctx[_var]) and ctx[_var].length > 0
       return ctx[_var]
     else if typeof ctx[_var] is 'object'
       newArr = []

@@ -90,6 +90,29 @@ suite =
         </body>
       </html>
       """
+  ,
+    name: 'Should handle empty string comparisons'
+    file: 'main_if_2'
+    ctx:
+      one: ""
+      two: "two"
+      arr: [
+        "str"
+      ]
+    expected: """
+      <!DOCTYPE html>
+      <html lang="en">
+        <head>
+          <meta charset="utf-8">
+          <title>Lego Test</title>
+        </head>
+        <body>
+          <p>Hello world</p>
+          <p>Hello again</p>
+          <p>Str</p>
+        </body>
+      </html>
+      """
   ]
 
 config.buildSuite(suite)
