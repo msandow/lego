@@ -1,8 +1,10 @@
 _eval = require(__dirname + '/eval.coffee')
 
 insert = 
-  regexp: new RegExp('lego::insert\\s+(.*?)', 'i')
-  subTreeRegexp: new RegExp('(<|&lt;)!-- lego::insert\\s+(.*?) --(>|&gt;)', 'gim')
+  regexp: new RegExp('lego::insert\\s+([\\S]*)', 'i')
+  subTreeRegexp: new RegExp('(<|&lt;)!-- lego::insert\\s+([\\S]*) --(>|&gt;)', 'gim')
+
+insert.name = '_insert'
 
 insert.findComments = ($) ->
   $('*').contents().filter((i, el) ->
@@ -31,6 +33,9 @@ insert.recurse = ($, ctx) ->
 
 insert.resolve = (root, el, ctx) ->
   fetchVar = (_var) ->
+    if typeof ctx is 'string' or typeof ctx is 'number' and _var is '$this'
+      return String(ctx)
+  
     e = _eval(_var, ctx)
 
     if typeof e is 'object'
@@ -47,7 +52,7 @@ insert.resolve = (root, el, ctx) ->
         e = JSON.stringify(e)
       
     return e
-
+  
   if el.type is 'comment'
     _var = el.data.trim().replace(insert.regexp, '$1')
     return fetchVar(_var)

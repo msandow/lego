@@ -6,6 +6,8 @@ _if =
   closeRegexp: new RegExp('lego::endif\\s*', 'i')
   isString: new RegExp('("|&quot;|\'|&apos;)([\\w]*)("|&quot;|\'|&apos;)', 'i')
 
+_if.name = '_if'
+
 _if.findOpenComments = ($) ->
   $('*').contents().filter((i, el) ->
     el.type is 'comment' and _if.openRegexp.test(el.data.trim())

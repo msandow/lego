@@ -1,13 +1,13 @@
 pairs = require(__dirname + '/pairs.coffee')
 cheerio = require('cheerio')
-insert = require(__dirname + '/insert.coffee')
-_if = require(__dirname + '/if.coffee')
-_ctx = require(__dirname + '/context.coffee')
 _eval = require(__dirname + '/eval.coffee')
 
+
 _fe = 
-  openRegexp: new RegExp('lego::foreach\\s+(.*?)', 'i')
+  openRegexp: new RegExp('lego::foreach\\s+([\\S]*)', 'i')
   closeRegexp: new RegExp('lego::endforeach\\s*', 'i')
+
+_fe.name = '_fe'
 
 _fe.findOpenComments = ($) ->
   $('*').contents().filter((i, el) ->
@@ -33,12 +33,7 @@ _fe.resolvedParser = (fullSet, ctx) ->
       cloned = cheerio.load('<body></body>')
       cloned('*').first().append(stamp.clone())
 
-      if _fe.findOpenComments(cloned)
-        _fe.recurse(cloned,resolved[i])          
-
-      insert.recurse(cloned, resolved[i])
-      _if.recurse(cloned, resolved[i])
-
+      _fe._sync.recurse(cloned,resolved[i])
       newNode.append(cloned('body').html())
       i++
 
@@ -82,7 +77,7 @@ _fe.resolve = (el, ctx) ->
     newArr = []
       
     for own k,v of e
-      if _ctx.excludedKeys.indexOf(k) is -1
+      if _fe._ctx.excludedKeys.indexOf(k) is -1
         newArr.push({'$key':k, '$value':v})
     
     return newArr

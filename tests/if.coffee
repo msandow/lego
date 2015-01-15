@@ -113,6 +113,25 @@ suite =
         </body>
       </html>
       """
+  ,
+    name: 'Should include via function'
+    file: 'main_if'
+    ctx:
+      computed: ()->
+        'hello'
+    expected: """
+      <!DOCTYPE html>
+      <html lang="en">
+        <head>
+          <meta charset="utf-8">
+          <title>Lego Test</title>
+        </head>
+        <body> 
+          <p>Bar</p>
+          <p>hello</p>
+        </body>
+      </html>
+      """
   ]
 
 config.buildSuite(suite)

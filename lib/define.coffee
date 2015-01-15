@@ -2,7 +2,7 @@ pairs = require(__dirname + '/pairs.coffee')
 cheerio = require('cheerio')
 
 define = 
-  openRegexp: new RegExp('lego::define\\s+(.*?)', 'i')
+  openRegexp: new RegExp('lego::define\\s+([\\S]*)', 'i')
   closeRegexp: new RegExp('lego::enddefine\\s*', 'i')
 
 define.findOpenComments = ($) ->

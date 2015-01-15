@@ -111,6 +111,25 @@ suite =
       </html>
       """
   ,
+    name: 'Should insert invoked function'
+    file: 'main_insert_function'
+    ctx:
+      adder: (i)->
+        i+5
+      arr: [1,2,3,4,5]
+    expected: """
+      <!DOCTYPE html>
+      <html lang="en">
+        <head>
+          <meta charset="utf-8">
+          <title>Lego Test</title>
+        </head>
+        <body>
+          <p>10</p>
+        </body>
+      </html>
+      """
+  ,
     name: 'Should insert vars - array'
     file: 'main_insert_array'
     ctx:

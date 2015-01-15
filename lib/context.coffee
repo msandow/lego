@@ -1,5 +1,7 @@
 module.exports = 
-
+  
+  name: '_ctx'
+  
   excludedKeys: ['templatesRoot', '$this', '$parent', '$root']
 
   clone: (o) ->

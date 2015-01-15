@@ -1,13 +1,11 @@
 path = require('path')
 async = require('async')
 fs = require('fs')
-insert = require(__dirname + '/insert.coffee')
-_if = require(__dirname + '/if.coffee')
-_fe = require(__dirname + '/foreach.coffee')
 define = require(__dirname + '/define.coffee')
+_sync = require(__dirname + '/sync.coffee')
 
 req = 
-  regexp: new RegExp('lego::require\\s+(.*?)', 'i')
+  regexp: new RegExp('lego::require\\s+([\\S]*)', 'i')
   fetchedTemplates: {}
 
 req.findComments = ($) ->
@@ -72,11 +70,9 @@ req.recurse = ($, ctx, root, finished) ->
         if req.fetchedTemplates[absPath] isnt undefined
           $(el).replaceWith($(req.fetchedTemplates[absPath]))
       )
-
+      
       define.recurse($, ctx)
-      _fe.recurse($, ctx)
-      insert.recurse($, ctx)
-      _if.recurse($, ctx)
+      _sync.recurse($, ctx)
       
       if req.findComments($).length
         req.recurse($, ctx, root, finished)
@@ -85,9 +81,7 @@ req.recurse = ($, ctx, root, finished) ->
     )  
   else
     define.recurse($, ctx)
-    _fe.recurse($, ctx)
-    insert.recurse($, ctx)
-    _if.recurse($, ctx)
+    _sync.recurse($, ctx)
   
     finished($.html())
 
