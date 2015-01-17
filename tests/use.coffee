@@ -12,12 +12,13 @@ suite =
       obj2:
         name: 'Greg'
         age: 40
+      title: 'Page Title'
     expected: """
       <!DOCTYPE html>
       <html lang="en">
         <head>
           <meta charset="utf-8">
-          <title>Lego Test</title>
+          <title>Page Title</title>
         </head>
         <body>
           <div>

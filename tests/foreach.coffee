@@ -170,6 +170,17 @@ suite =
       </html>
       """
   ,
+    name: 'Should insert fragment level values'
+    file: 'main_foreach_fragment'
+    ctx:
+      foo:'<span>string</span>'
+      arr: [1,2,3,4]
+    expected: """
+      <span>string</span>
+      <span>string</span>
+      <span>string</span>
+      """
+  ,
     name: 'Should insert object iterations'
     file: 'main_foreach_object'
     ctx:

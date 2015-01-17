@@ -39,7 +39,7 @@ module.exports =
   render: (filePath, ctx, callback) ->
     fs.readFile(filePath, (err, contents)->
       req.recurse(
-        cheerio.load(contents.toString()),
+        cheerio.load('<lego>' + contents.toString() + '</lego>'),
         _ctx.build(ctx),
         if ctx.templatesRoot then path.resolve(attachedDir, ctx.templatesRoot) else path.dirname(filePath),
         (renderedTemplate)->
@@ -50,7 +50,7 @@ module.exports =
   compile: (template, options, callback) ->
     callback(null, (ctx, opts, cb) ->
       req.recurse(
-        cheerio.load(template),
+        cheerio.load('<lego>' + template + '</lego>'),
         _ctx.build(ctx),
         if ctx.templatesRoot then path.resolve(attachedDir, ctx.templatesRoot) else path.dirname(options.filename),
         (renderedTemplate)->
