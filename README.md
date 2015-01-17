@@ -1,4 +1,4 @@
-# Lego
+![Lego](http://bucket.usastra.com/gallery/Web Resources/lego.png)
 
 ***Blocks. They're all blocks.***
 
