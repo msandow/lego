@@ -3,7 +3,7 @@ cheerio = require('cheerio')
 _eval = require(__dirname + '/eval.coffee')
 
 
-_fe = 
+_fe =
   openRegexp: new RegExp('lego::foreach\\s+([\\S]*)', 'i')
   closeRegexp: new RegExp('lego::endforeach\\s*', 'i')
 

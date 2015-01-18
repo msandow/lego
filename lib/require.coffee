@@ -5,7 +5,7 @@ define = require(__dirname + '/define.coffee')
 _sync = require(__dirname + '/sync.coffee')
 _eval = require(__dirname + '/eval.coffee')
 
-req = 
+req =
   regexp: new RegExp('lego::require\\s+([\\S]*)', 'i')
   fetchedTemplates: {}
   
@@ -86,7 +86,7 @@ req.recurse = ($, ctx, root, finished) ->
         req.recurse($, ctx, root, finished)
       else
         finished(req.clean($))
-    )  
+    )
   else
     define.recurse($, ctx)
     _sync.recurse($, ctx)
@@ -98,7 +98,7 @@ req.resolve = (el, root, ctx) ->
   _e = _eval(relPath, ctx)
   
   if typeof _e is 'function'
-    _e is _e()
+    _e = _e()
   
   if typeof _e isnt 'string'
     _e = false

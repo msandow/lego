@@ -1,0 +1,16 @@
+<!-- lego::if currentPage == 0 || forceHeader -->
+<h1>Welcome</h1>
+<!-- lego::endif -->
+
+<a href="user/<!-- lego::insert userID -->"><!-- lego::insert userName --></a>
+
+<ul class="pagination">
+  <!-- lego::foreach pagination -->
+    <!-- lego::if $this == $root.currentPage -->
+      <li class="active"><!-- lego::insert $this --></li>
+    <!-- lego::endif -->
+    <!-- lego::notif $this == $root.currentPage -->
+      <li><!-- lego::insert $this --></li>
+    <!-- lego::endif -->
+  <!-- lego::endforeach -->
+</ul>

@@ -6,7 +6,7 @@ _ctx = require(__dirname + '/context.coffee')
 
 attachedDir = __dirname
 
-module.exports = 
+module.exports =
   attach: (server, templates) ->
     if server.views and server.version
       # Hapi
@@ -14,7 +14,7 @@ module.exports =
       attachedDir = templates
 
       server.views(
-        engines: 
+        engines:
           html: @
         path: templates
         compileMode: 'async'

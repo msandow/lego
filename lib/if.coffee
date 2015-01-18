@@ -1,8 +1,8 @@
 pairs = require(__dirname + '/pairs.coffee')
 _eval = require(__dirname + '/eval.coffee')
 
-_if = 
-  openRegexp: new RegExp('lego::(if|notif)\\s+([\\S]*)\\s*([\\S]*)\\s*([\\S]*)', 'i')
+_if =
+  openRegexp: new RegExp('lego::(if|notif)\\s+(.*)', 'i')
   closeRegexp: new RegExp('lego::endif\\s*', 'i')
   isString: new RegExp('("|&quot;|\'|&apos;)([\\w]*)("|&quot;|\'|&apos;)', 'i')
 
@@ -58,21 +58,8 @@ _if.resolve = (el, ctx) ->
     else
       return !!v
   
-  if el.data.trim().replace(_if.openRegexp, '$3') and el.data.trim().replace(_if.openRegexp, '$4')
-    op = el.data.trim().replace(_if.openRegexp, '$3')
-    comp = el.data.trim().replace(_if.openRegexp, '$4')
-    
-    op = '===' if op is 'is'
-    op = '!==' if op is 'isnt'
-    
-    
-    if not _if.isString.test(comp)
-      comp = comp.replace(/(\w)(\[\d+\])/gi, '$1.$this$2')
-    
-    statement = _var.replace(/(\w)(\[\d+\])/gi, '$1.$this$2') + ' ' + op + ' ' + comp
-    state = getState(_eval(statement, ctx))
-  else    
-    state = getState(_eval(_var, ctx))
+  _var = _var.replace(/(\[\d+\])(\s|$)/gi, '.$this$1')
+  state = getState(_eval(_var, ctx))
 
   if _case is 'notif' then !state else state
 

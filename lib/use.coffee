@@ -16,7 +16,7 @@ _use.findComments = ($) ->
     (el.type is 'comment' and _use.regexp.test(el.data.trim()))
   )
 
-_use.recurse = ($, ctx) ->  
+_use.recurse = ($, ctx) ->
   uses = _use.findComments($)
   
   uses.each((i, el) ->

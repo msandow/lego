@@ -1,8 +1,9 @@
 _eval = require(__dirname + '/eval.coffee')
 
-insert = 
+insert =
   regexp: new RegExp('lego::insert\\s+([\\S]*)', 'i')
-  subTreeRegexp: new RegExp('(<|&lt;)!-- lego::insert\\s+([\\S]*) --(>|&gt;)', 'gim')
+  subTreeRegexp: new RegExp('(.*?)(<|&lt;)!-- lego::insert\\s+'+
+    '([\\S]*) --(>|&gt;)(.*?)', 'gim')
 
 insert.name = '_insert'
 
@@ -38,9 +39,8 @@ insert.resolve = (root, el, ctx) ->
   
     e = _eval(_var, ctx)
 
-    if typeof e is 'object'
-      if e.$this isnt undefined
-        e = e.$this
+    if typeof e is 'object' and e.$this isnt undefined
+      e = e.$this
     else if typeof e is 'number'
       e = String(e)
     else if typeof e is 'function'
@@ -48,8 +48,8 @@ insert.resolve = (root, el, ctx) ->
     else if typeof e is 'boolean'
       e = ''
       
-     if typeof e is 'object'
-        e = JSON.stringify(e)
+    if typeof e is 'object'
+      e = JSON.stringify(e)
       
     return e
   
@@ -62,8 +62,8 @@ insert.resolve = (root, el, ctx) ->
 
     for own k,v of attrs
       if insert.regexp.test(v)
-        _var = v.trim().replace(insert.subTreeRegexp, '$2')
-        rep.attr(k, fetchVar(_var))
+        _var = v.trim().replace(insert.subTreeRegexp, '$3')
+        rep.attr(k, v.trim().replace(insert.subTreeRegexp, '$1'+fetchVar(_var)+'$5'))
 
     return rep
 

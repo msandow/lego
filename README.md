@@ -11,6 +11,7 @@ Hapi *( >= 8)* and Express *( >= 4 )* HTML templating for files with .html exten
 - [Define](#define)
 - [Foreach](#foreach)
 - [If / Notif](#if)
+- [Insert](#insert)
 
 <p>&nbsp;</p>
 
@@ -292,7 +293,7 @@ var context = {
 ```
 
 ```html
-<!-- lego::if verbs.length is length -->
+<!-- lego::if verbs.length == length -->
   <span>Matches</span>
 <!-- lego::endif -->
 
@@ -308,6 +309,7 @@ Yielding...
 <span>Does not match</span>
 ```
 
-Take special note that you can use coffeescript `is` and `isnt` terms in place of `===` and `!==`.
+<p>&nbsp;</p>
 
-Currently, more complex multiple comparisons joined with `&&` or `||` aren't supported in a single lego tag. You can, however, nest multiple `if` / `notif` tags to achieve similar results, although such complex abstractions are better left to derived attributes in the context object itself.
+<a name="insert"></a>
+### - Insert
