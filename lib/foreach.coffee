@@ -64,6 +64,7 @@ _fe.recurse = ($, ctx) ->
         _fe.recurse($, ctx)
     else
       console.warn('Unmatched number of foreach and endforeachs')
+      fes.add(efes).remove()
   
   $
 

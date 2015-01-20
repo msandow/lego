@@ -41,6 +41,7 @@ define.recurse = ($, ctx) ->
         define.recurse($, ctx)
     else
       console.warn('Unmatched number of ifs and endifs')
+      ifs.add(eifs).remove()
   
   $
 

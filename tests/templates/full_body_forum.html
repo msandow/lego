@@ -8,8 +8,7 @@
   <!-- lego::foreach pagination -->
     <!-- lego::if $this == $root.currentPage -->
       <li class="active"><!-- lego::insert $this --></li>
-    <!-- lego::endif -->
-    <!-- lego::notif $this == $root.currentPage -->
+    <!-- lego::else -->
       <li><!-- lego::insert $this --></li>
     <!-- lego::endif -->
   <!-- lego::endforeach -->

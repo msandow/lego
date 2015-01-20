@@ -15,6 +15,7 @@ _sync.anyLength = ($) ->
   )
 
 _sync.recurse = ($, ctx) ->
+  _if.expandElses($, ctx)
   _fe.recurse($, ctx)
   _insert.recurse($, ctx)
   _if.recurse($, ctx)

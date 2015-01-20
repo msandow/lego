@@ -109,6 +109,7 @@ suite =
         <body>
           <p>Hello world</p>
           <p>Hello again</p>
+          <p>Else</p>
           <p>Str</p>
         </body>
       </html>
