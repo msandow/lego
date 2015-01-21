@@ -13,6 +13,7 @@ Hapi *( >= 8)* and Express *( >= 4 )* HTML templating for files with .html exten
 - [If / Notif / Else](#if)
 - [Insert](#insert)
 - [Require](#require)
+- [Use](#use)
 
 <p>&nbsp;</p>
 
@@ -366,7 +367,7 @@ Keyword | Use
 
 <p>&nbsp;</p>
 
-<a name="if"></a>
+<a name="require"></a>
 ### - Require
 
 Using require, you can inject file system templates or partials into other templates. Let's try requiring an HTML file into another, by creating these two files in our templates directory:
@@ -435,4 +436,65 @@ When invoked with...
 <!-- lego::require template -->
 ```
 
-Would attempt to require a file with name `my_partial.html`.
+Would attempt to require a file with name `my_partial.html`. Useful for when you can a single boilerplate template that loads different requires based off request parameters.
+
+<p>&nbsp;</p>
+
+<a name="use"></a>
+### - Use
+
+Using the `use` command allows you to marry any templates created with `define` and specific pieces of data in your rendering context.
+
+Let's take this situation as an example...
+
+```javascript
+var context = {
+  cities:[
+    {
+      'name': 'San Francisco',
+      'mayor': 'Dude 1',
+      'state': 'California'
+    },
+    {
+      'name': 'Los Angeles',
+      'mayor': 'Dude 2',
+      'state': 'California'
+    }
+  ]
+}
+```
+
+```html
+<!-- lego::foreach cities -->
+  <p><!-- lego::insert name -->, <!-- lego::insert state -->: <b><!-- lego::insert mayor --></b></p>
+<!-- lego::endforeach -->
+```
+
+If we had data that wasn't stored in an array, but had a structure that was shared between many pieces of data in our context, `use` allows us to handle this case. Let's see...
+
+```javascript
+var context = {
+  myCity: {
+    'name': 'San Francisco',
+    'mayor': 'Dude 1',
+    'state': 'California'
+  },
+  yourCity: {
+    'name': 'Los Angeles',
+    'mayor': 'Dude 2',
+    'state': 'California'
+  }
+}
+```
+
+```html
+<!-- lego::define cityTemplate -->
+  <p><!-- lego::insert name -->, <!-- lego::insert state -->: <b><!-- lego::insert mayor --></b></p>
+<!-- lego::enddefine -->
+
+<!-- lego::use cityTemplate with myCity -->
+
+<!-- lego::use cityTemplate with yourCity -->
+```
+
+This example would render exactly the same as the `foreach` example above.
