@@ -330,7 +330,7 @@ Let's see how:
 
 ```javascript
 var context = {
-  'userIds': [111, 222, 333, 444]
+  'userIds': [111, 222, 333, 444],
   'attributes': {
     'name': 'Bob',
     'userId': 222
