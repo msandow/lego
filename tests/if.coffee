@@ -50,6 +50,7 @@ suite =
           <title>Lego Test</title>
         </head>
         <body>
+          <p>Empty</p>
         </body>
       </html>
       """
@@ -58,6 +59,7 @@ suite =
     file: 'main_if_mixed'
     ctx:
       foo: 't'
+      arr: []
     expected: """
       <!DOCTYPE html>
       <html lang="en">
@@ -66,6 +68,7 @@ suite =
           <title>Lego Test</title>
         </head>
         <body>
+          <p>Empty</p>
         </body>
       </html>
       """

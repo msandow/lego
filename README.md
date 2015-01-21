@@ -10,8 +10,9 @@ Hapi *( >= 8)* and Express *( >= 4 )* HTML templating for files with .html exten
 
 - [Define](#define)
 - [Foreach](#foreach)
-- [If / Notif](#if)
+- [If / Notif / Else](#if)
 - [Insert](#insert)
+- [Require](#require)
 
 <p>&nbsp;</p>
 
@@ -239,7 +240,7 @@ Yields...
 <p>&nbsp;</p>
 
 <a name="if"></a>
-### - If / Ifnot
+### - If / Notif / Else
 
 The means of inserting logic into your templates, which comes in two flavors: a simple truthy comparison, or a direct comparison between two points of data.
 
@@ -260,12 +261,17 @@ var context = {
 <!-- lego::if verbs -->
   <span><!-- lego::insert verbs --></span>
 <!-- lego::endif -->
+
+<!-- lego::notif verbs -->
+  <span>No verbs found</span>
+<!-- lego::endif -->
 ```
 
 Yielding...
 
 ```html
 <span>hello</span>
+<span>No verbs found</span>
 ```
 
 For truthy evaluations when using the simple `if` / `notif` conditionals, refer to the table below:
@@ -295,9 +301,13 @@ var context = {
 ```html
 <!-- lego::if verbs.length == length -->
   <span>Matches</span>
+ <!-- lego:else -->
+  <span>Does not match</span>
 <!-- lego::endif -->
 
-<!-- lego::if word !== 'world' -->
+<!-- lego::if word == 'world' -->
+  <span>Matches</span>
+<!-- lego::else -->
   <span>Does not match</span>
 <!-- lego::endif -->
 ```
@@ -313,3 +323,116 @@ Yielding...
 
 <a name="insert"></a>
 ### - Insert
+
+What good is a templating engine if you can't insert content? We've seen plenty of examples of inserting strings / integers as text nodes and attributes already. But you can also use `insert` for debugging as well.
+
+Let's see how:
+
+```javascript
+var context = {
+  'userIds': [111, 222, 333, 444]
+  'attributes': {
+    'name': 'Bob',
+    'userId': 222
+  }
+};
+```
+
+```html
+<code><!-- lego::insert userIds --></code>
+
+<code><!-- lego::insert attributes --></code>
+```
+
+Yielding...
+
+```html
+<code>[111,222,333,444]</code>
+
+<code>{&quot;attributes&quot;:{&quot;name&quot;:&quot;Bob&quot;,&quot;userId&quot;:222}}</code>
+```
+
+<p>&nbsp;</p>
+
+Although shown in various examples above, here's a list of the reserved keywords you can use in `insert`, as well as in `if` / `foreach`:
+
+Keyword | Use
+:--- | :---
+`$this` | For referencing the particular item when iterating through an array of values with `foreach`
+`$parent` | For referencing the parent object or array of any array item or object property
+`$root` | For referencing the top-most context object passed to the rendering method
+`$key` | For referencing the property key when iterating through an object with `foreach`
+`$value` | For referencing the property value when iterating through an object with `foreach`
+
+<p>&nbsp;</p>
+
+<a name="if"></a>
+### - Require
+
+Using require, you can inject file system templates or partials into other templates. Let's try requiring an HTML file into another, by creating these two files in our templates directory:
+
+`header.html`
+```html
+<h1>Welcome to my site</h1>
+```
+
+`index.html`
+```html
+<html>
+  <body>
+    <!-- lego::require ./header.html -->
+    <p>Hello world</p>
+  </body>
+</html>
+```
+
+When rendering `index`, we'd get the following:
+
+```html
+<html>
+  <body>
+    <h1>Welcome to my site</h1>
+    <p>Hello world</p>
+  </body>
+</html>
+```
+
+You can also require any other JS module, that exports an object of the following signature:
+
+```javascript
+// For synchronous modules
+{
+  'compileMode': 'sync',
+  'render': function(){
+    return '<p>My new html</p>';
+  }
+}
+
+// For asynchronous modules
+{
+  'compileMode': 'async',
+  'render': function(callback){
+    callback('<p>My new html</p>');
+  }
+}
+```
+
+Anything returned from a synchronous module, or fed to the callback of an asynchronous module, will be what's get inserted inserted in place of the `require` call.
+
+Another option is a dynamic require, using data from the context object. Let's try that with the following context:
+
+```javascript
+var context = {
+  'template': function(){
+    return 'my_partial.html';
+  }
+};
+```
+
+When invoked with...
+
+```html
+<!-- lego::require template -->
+```
+
+Would attempt to require a file with name `my_partial.html`.
