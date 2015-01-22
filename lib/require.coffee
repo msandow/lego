@@ -6,7 +6,7 @@ _sync = require(__dirname + '/sync.coffee')
 _eval = require(__dirname + '/eval.coffee')
 
 req =
-  regexp: new RegExp('lego::require\\s+([\\S]*)', 'i')
+  regexp: new RegExp('lego::\\s*require\\s+([\\S]*)', 'i')
   fetchedTemplates: {}
   
 

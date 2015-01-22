@@ -43,6 +43,13 @@ suite =
         </body>
       </html>
       """
+  ,
+    name: 'Should strip properly formatted tags'
+    file: 'main_strip'
+    ctx: {}
+    expected: """
+      
+      """
   ]
 
 config.buildSuite(suite)

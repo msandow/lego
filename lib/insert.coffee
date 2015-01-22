@@ -1,8 +1,8 @@
 _eval = require(__dirname + '/eval.coffee')
 
 insert =
-  regexp: new RegExp('lego::insert\\s+([\\S]*)', 'i')
-  subTreeRegexp: new RegExp('(.*?)(<|&lt;)!-- lego::insert\\s+'+
+  regexp: new RegExp('lego::\\s*insert\\s+([\\S]*)', 'i')
+  subTreeRegexp: new RegExp('(.*?)(<|&lt;)!-- lego::\\s*insert\\s+'+
     '([\\S]*) --(>|&gt;)(.*?)', 'gim')
 
 insert.name = '_insert'

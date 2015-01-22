@@ -4,8 +4,8 @@ _eval = require(__dirname + '/eval.coffee')
 
 
 _fe =
-  openRegexp: new RegExp('lego::foreach\\s+([\\S]*)', 'i')
-  closeRegexp: new RegExp('lego::endforeach\\s*', 'i')
+  openRegexp: new RegExp('lego::\\s*foreach\\s+([\\S]*)', 'i')
+  closeRegexp: new RegExp('lego::\\s*endforeach\\s*', 'i')
 
 _fe.name = '_fe'
 
@@ -44,7 +44,7 @@ _fe.recurse = ($, ctx) ->
   fes = _fe.findOpenComments($)
   efes = _fe.findCloseComments($)
 
-  if fes.length and efes.length
+  if fes.length or efes.length
     if fes.length is efes.length
 
       pairs(

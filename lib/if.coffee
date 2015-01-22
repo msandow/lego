@@ -2,10 +2,10 @@ pairs = require(__dirname + '/pairs.coffee')
 _eval = require(__dirname + '/eval.coffee')
 
 _if =
-  openRegexp: new RegExp('lego::(if|notif)\\s+(.*)', 'i')
-  closeRegexp: new RegExp('lego::endif\\s*', 'i')
+  openRegexp: new RegExp('lego::\\s*(if|notif)\\s+(.*)', 'i')
+  closeRegexp: new RegExp('lego::\\s*endif\\s*', 'i')
   isString: new RegExp('("|&quot;|\'|&apos;)([\\w]*)("|&quot;|\'|&apos;)', 'i')
-  elses: new RegExp('lego::else\\s*', 'i')
+  elses: new RegExp('lego::\\s*else\\s*', 'i')
 
 _if.name = '_if'
 
@@ -56,7 +56,7 @@ _if.recurse = ($, ctx) ->
   ifs = _if.findOpenComments($)
   eifs = _if.findCloseComments($)
 
-  if ifs.length and eifs.length
+  if ifs.length or eifs.length
     if ifs.length is eifs.length
       
       pairs(

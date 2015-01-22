@@ -7,7 +7,7 @@ isHTML = (str)->
   !!body.children().length
 
 _use =
-  regexp: new RegExp('lego::use\\s+([\\S]*)\\s+with\\s+([\\S]*)', 'i')
+  regexp: new RegExp('lego::\\s*use\\s+([\\S]*)\\s+with\\s+([\\S]*)', 'i')
 
 _use.name = '_use'
 

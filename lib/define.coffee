@@ -2,8 +2,8 @@ pairs = require(__dirname + '/pairs.coffee')
 cheerio = require('cheerio')
 
 define =
-  openRegexp: new RegExp('lego::define\\s+([\\S]*)', 'i')
-  closeRegexp: new RegExp('lego::enddefine\\s*', 'i')
+  openRegexp: new RegExp('lego::\\s*define\\s+([\\S]*)', 'i')
+  closeRegexp: new RegExp('lego::\\s*enddefine\\s*', 'i')
 
 define.findOpenComments = ($) ->
   $('*').contents().filter((i, el) ->
@@ -19,7 +19,7 @@ define.recurse = ($, ctx) ->
   ifs = define.findOpenComments($)
   eifs = define.findCloseComments($)
 
-  if ifs.length and eifs.length
+  if ifs.length or eifs.length
     if ifs.length is eifs.length
       
       pairs(
